@@ -1,31 +1,32 @@
 Hosting CiviCRM
 ===============
 
-This is the front-end Aegir module to manage CiviCRM in Aegir.
+This is the front-end Aegir module to manage CiviCRM [1] in Aegir [2].
 It manages the CiviCRM crons (using the hosting_civicrm_cron submodule)
 and the CiviCRM API site key.
 
-Built with Aegir up [1] by Ergon Logic Enterprises [2] for use with
-CiviCRM [3] and Provision CiviCRM [4] on the Aegir Hosting System [5].
-Maintained and supported by Coop SymbioTIC [6] and Praxis Labs Coop [7].
+Developed, maintained and supported by Coop SymbioTIC [3], Praxis Labs Coop [4]
+and Ergon Logic Enterprises [5].
 
-[1] https://drupal.org/project/project/aegir-up
-[2] http://ergonlogic.com
-[3] https://civicrm.org
-[4] https://drupal.org/project/provision_civicrm
-[5] http://www.aegirproject.org/
-[6] https://www.symbiotic.coop
-[7] http://praxis.coop
+[1] https://civicrm.org
+[2] http://www.aegirproject.org/
+[3] https://www.symbiotic.coop
+[4] http://praxis.coop
+[5] http://ergonlogic.com
 
 Installation
 ============
+
+Hosting CiviCRM is now included in the Aegir Hosting System distribution, as
+part of the "Golden contrib" initiative. As such, it is available to enable by
+default as of Aegir 3.2. For older versions, follow these steps:
 
 - Copy the module to your /var/aegir/hostmaster/sites/aegir.example.org/modules/
 - Enable the module: drush @hostmaster en hosting_civicrm -y
 - In Aegir, give the 'configure site CiviCRM cron intervals' permission to admins.
 
 If you are using the Debian package for Aegir and you would like to
-automate the installation of the module on new Aegir installs, you 
+automate the installation of the module on new Aegir installs, you
 should use a custom makefile so that the module is not lost after an upgrade:
 http://community.aegirproject.org/upgrading/debian#Custom_distributions
 
