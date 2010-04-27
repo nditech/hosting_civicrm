@@ -8,6 +8,9 @@ and the CiviCRM API site key.
 Developed, maintained and supported by Coop SymbioTIC [3], Praxis Labs Coop [4]
 and Ergon Logic Enterprises [5].
 
+Installation instructions
+-------------------------
+
 [1] https://civicrm.org
 [2] http://www.aegirproject.org/
 [3] https://www.symbiotic.coop
