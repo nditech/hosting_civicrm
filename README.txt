@@ -8,17 +8,14 @@ and the CiviCRM API site key.
 Developed, maintained and supported by Coop SymbioTIC [3], Praxis Labs Coop [4]
 and Ergon Logic Enterprises [5].
 
-Installation instructions
--------------------------
-
 [1] https://civicrm.org
 [2] http://www.aegirproject.org/
 [3] https://www.symbiotic.coop
 [4] http://praxis.coop
 [5] http://ergonlogic.com
 
-Installation
-============
+Installation instructions
+-------------------------
 
 Hosting CiviCRM is now included in the Aegir Hosting System distribution, as
 part of the "Golden contrib" initiative. As such, it is available to enable by
