@@ -75,10 +75,16 @@ function hosting_civicrm_cron_nodeapi(&$node, $op, $a3 = null) {
   }
 }
 
+/**
+ * Return the last CiviCRM cron for a site
+ */
 function _last_civicrm_cron($nid) {
   return db_result(db_query('SELECT last_civicrm_cron FROM {hosting_site} WHERE nid = %d', $nid));
 }
 
+/**
+ * Return the number of sites where CiviCRM is available
+ */
 function hosting_civicrm_cron_site_count() {
   $platforms = hosting_civicrm_cron_get_platforms();
 
@@ -90,6 +96,9 @@ function hosting_civicrm_cron_site_count() {
   return $count;
 }
 
+/**
+ * Return an array of platforms that contain CiviCRM
+ */
 function hosting_civicrm_cron_get_platforms() {
   //TODO: cache the result
   $package_id = db_result(db_query('SELECT nid FROM {hosting_package} WHERE short_name = "%s"', 'civicrm'));
