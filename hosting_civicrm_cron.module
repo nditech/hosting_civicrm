@@ -57,13 +57,16 @@ function hosting_civicrm_cron_nodeapi(&$node, $op, $a3 = null) {
   if ($node->type == 'site') {
     if (in_array($node->platform, hosting_civicrm_cron_get_platforms())) {
       switch ($op) {
+        case 'load':
+          $node->last_civicrm_cron = _last_civicrm_cron($node->nid);
+          break;
         case 'view':
           if (!$a3) {
             $node->content['info']['last_civicrm_cron'] = array(
               '#type' => 'item',
               '#title' => t('CiviCRM cron run'),
               '#weight' => 20,
-              '#value' => hosting_format_interval(_last_civicrm_cron($node->nid)),
+              '#value' => hosting_format_interval($node->last_civicrm_cron),
             );
           }
           break;
