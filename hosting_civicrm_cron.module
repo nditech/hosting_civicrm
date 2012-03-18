@@ -110,3 +110,29 @@ function hosting_civicrm_cron_get_platforms() {
   }
   return $platforms;
 }
+
+/**
+ * Return an array of enabled sites capable of running CiviCRM
+ *
+ * @param $order_by
+ *   Field to order the returned sites by.
+ */
+function hosting_civicrm_cron_get_sites($order_by = null) {
+  $platforms = hosting_civicrm_cron_get_platforms();
+  $sites = array();
+
+  foreach ($platforms as $platform) {
+    //get all the enabled sites on the platform
+    if (isset($order_by)) {
+      $result = db_query('SELECT n.nid FROM {node} n LEFT JOIN {hosting_site} s ON n.nid=s.nid WHERE n.type="site" and s.status = %d and s.platform = %d ORDER BY "%s" ASC', HOSTING_SITE_ENABLED, $platform, $order_by);
+    }
+    else {
+      $result = db_query('SELECT n.nid FROM {node} n LEFT JOIN {hosting_site} s ON n.nid=s.nid WHERE n.type="site" and s.status = %d and s.platform=%d', HOSTING_SITE_ENABLED, $platform);
+    }
+    while ($nid = db_fetch_object($result)->nid) {
+      $sites[] = $nid;
+    }
+  }
+
+  return $sites;
+}
