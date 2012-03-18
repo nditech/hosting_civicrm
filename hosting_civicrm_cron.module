@@ -27,9 +27,8 @@ function hosting_civicrm_cron_hosting_queues() {
  * Implementation of hosting_QUEUE_TYPE_queue().
  */
 function hosting_civicrm_cron_queue($count) {
-  $result = db_query_range("SELECT n.nid FROM {node} n LEFT JOIN {hosting_site} s ON n.nid=s.nid WHERE n.type='site' and s.status = %d ORDER BY s.civicrm_last_cron ASC, n.nid ASC", HOSTING_SITE_ENABLED, 0, hosting_civicrm_cron_site_count());
-  $i = 0;
-  while ($i < $count && $nid = db_fetch_object($result)->nid) {
+  $sites = hosting_civicrm_cron_get_sites('last_civicrm_cron');
+  foreach ($sites as $nid) {
     $site = node_load($nid);
     $site_name = hosting_context_name($site->nid);
     $url =_hosting_site_url($site) . '/index.php';
@@ -46,7 +45,6 @@ function hosting_civicrm_cron_queue($count) {
     // same node at the same time, and then an old record from the cron queue might
     // replace the newly updated record.
     db_query("UPDATE {hosting_site} SET last_civicrm_cron=%d WHERE nid=%d", mktime(), $nid);
-    $i++;
   }
 }
 
