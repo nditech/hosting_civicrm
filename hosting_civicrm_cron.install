@@ -10,7 +10,7 @@
  */
 function hosting_civicrm_cron_schema_alter(&$schema) {
   // Add field to existing schema.
-  $schema['hosting_site']['fields']['civicrm_last_cron'] = array(
+  $schema['hosting_site']['fields']['last_civicrm_cron'] = array(
     'type' => 'int',
     'not null' => FALSE,
   );
@@ -20,7 +20,7 @@ function hosting_civicrm_cron_schema_alter(&$schema) {
  * Implements hook_install().
  */
 function hosting_civicrm_cron_install() {
-  db_add_field($ret, 'hosting_site', 'civicrm_last_cron', array(
+  db_add_field($ret, 'hosting_site', 'last_civicrm_cron', array(
     'type' => 'int',
     'not null' => FALSE,)
   );
@@ -30,5 +30,5 @@ function hosting_civicrm_cron_install() {
  * Implements hook_uninstall().
  */
 function hosting_civicrm_cron_uninstall() {
-  db_drop_field($ret, 'hosting_site', 'civicrm_last_cron');
+  db_drop_field($ret, 'hosting_site', 'last_civicrm_cron');
 }
