@@ -89,8 +89,8 @@ function hosting_civicrm_cron_site_count() {
 
 function hosting_civicrm_cron_get_platforms() {
   //TODO: cache the result
-  $nid = db_result(db_query("SELECT nid FROM {hosting_package} WHERE short_name='civicrm'"));
-  $result = db_query('SELECT nid FROM {hosting_platform} pl JOIN {hosting_package_instance} pkg ON pl.nid=pkg.rid WHERE pkg.package_id=%d', $nid); 
+  $package_id = db_result(db_query('SELECT nid FROM {hosting_package} WHERE short_name = "%s"', 'civicrm'));
+  $result = db_query('SELECT nid FROM {hosting_platform} pl JOIN {hosting_package_instance} pkg ON pl.nid=pkg.rid WHERE pkg.package_id=%d', $package_id); 
   
   $platforms = array();
   while ($nid = db_result($result)) {
