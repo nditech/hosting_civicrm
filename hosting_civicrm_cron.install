@@ -1,2 +1,34 @@
 <?php
-###TODO: add (and remove) a field on hosting_site comparable to last_cron, last_civicrm_cron
+
+/**
+ *  Add (and remove) a field in the hosting_site table comparable to last_cron
+ */
+
+
+/**
+ * Implements hook_schema_alter().
+ */
+function hosting_civicrm_cron_schema_alter(&$schema) {
+  // Add field to existing schema.
+  $schema['hosting_site']['fields']['civicrm_last_cron'] = array(
+    'type' => 'int',
+    'not null' => FALSE,
+  );
+}
+
+/**
+ * Implements hook_install().
+ */
+function hosting_civicrm_cron_install() {
+  db_add_field($ret, 'hosting_site', 'civicrm_last_cron', array(
+    'type' => 'int',
+    'not null' => FALSE,)
+  );
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function hosting_civicrm_cron_uninstall() {
+  db_drop_field($ret, 'hosting_site', 'civicrm_last_cron');
+}
