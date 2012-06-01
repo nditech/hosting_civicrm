@@ -24,10 +24,11 @@ CiviCRM [3] and Provision CiviCRM [4] on the Aegir Hosting System [5].
 Installation
 ============
 
-- Copy the module to your /var/aegir/hostmaster/sites/all/modules/
+- Copy the module to your /var/aegir/hostmaster/sites/aegir.example.org/modules/
 - Enable the module: drush @hostmaster en hosting_civicrm_cron -y
 
-If you are using the Debian package for Aegir, you should use a
-custom makefile so that the module is not lost after an upgrade:
+If you are using the Debian package for Aegir and you would like to
+automate the installation of the module on new Aegir installs, you 
+should use a custom makefile so that the module is not lost after an upgrade:
 http://community.aegirproject.org/upgrading/debian#Custom_distributions
 
