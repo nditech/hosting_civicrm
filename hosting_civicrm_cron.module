@@ -33,6 +33,8 @@ function hosting_civicrm_cron_queue($count) {
     $site_name = hosting_context_name($site->nid);
     $url =_hosting_site_url($site) . '/index.php';
 
+    // FIXME: Issue #1613484
+    // read http://wiki.civicrm.org/confluence/display/CRMDOC41/Managing+Scheduled+Jobs
     drush_log(dt("running CiviCRM cron on URL %url", array('%url' => $url)));
     $response = drupal_http_request($url, array(), 'GET', '?q=civicrm/mailing/queue&reset=1');
     if (isset($response->error) && $response->error) {

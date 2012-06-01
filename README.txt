@@ -32,3 +32,9 @@ automate the installation of the module on new Aegir installs, you
 should use a custom makefile so that the module is not lost after an upgrade:
 http://community.aegirproject.org/upgrading/debian#Custom_distributions
 
+Todo
+====
+
+#1613484 Call the CiviCRM cron using the 4.1 unified interface:
+http://wiki.civicrm.org/confluence/display/CRMDOC41/Managing+Scheduled+Jobs
+
