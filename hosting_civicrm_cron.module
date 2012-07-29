@@ -33,14 +33,27 @@ function hosting_civicrm_cron_queue($count) {
     $site_name = hosting_context_name($site->nid);
     $url =_hosting_site_url($site) . '/index.php';
 
-    // FIXME: Issue #1613484
+    // Issue #1613484
     // read http://wiki.civicrm.org/confluence/display/CRMDOC41/Managing+Scheduled+Jobs
-    drush_log(dt("running CiviCRM cron on URL %url", array('%url' => $url)));
+    // only run the cron on CiviCRM >= 4.1. Normally civicrm.drush.inc will test for 4.1
+    // and quietly exit otherwise (so we do not need to check here).
+    drush_log(dt("Running CiviCRM cron on URL %url", array('%url' => $url)));
+    $result = provision_backend_invoke($site_name, "civicrm-api", array('Job.execute'));
+
+    if (! empty($result['error_status'])) {
+      watchdog('hosting_civicrm_cron', t('ERROR: !error', array('!error' => $result['output'])));
+    }
+    else {
+      watchdog('hosting_civicrm_cron', t('CiviCRM cron run was sucessful.'));
+    }
+
+/*
     $response = drupal_http_request($url, array(), 'GET', '?q=civicrm/mailing/queue&reset=1');
     if (isset($response->error) && $response->error) {
       watchdog('hosting_civicrm_cron', 'CiviCRM cron failed on site %site with error %error', array('%site' => $site->title, '%error' => $response->error), WATCHDOG_NOTICE);
       continue; // don't update the timestamp
     }
+*/
 
     // We are updating the site table here directly to avoid a possible race condition,
     // with the task queue. There exists a chance that they might both try to save the
