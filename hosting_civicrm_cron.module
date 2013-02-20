@@ -47,14 +47,6 @@ function hosting_civicrm_cron_queue($count) {
       watchdog('hosting_civicrm_cron', t('CiviCRM cron run was sucessful.'));
     }
 
-/*
-    $response = drupal_http_request($url, array(), 'GET', '?q=civicrm/mailing/queue&reset=1');
-    if (isset($response->error) && $response->error) {
-      watchdog('hosting_civicrm_cron', 'CiviCRM cron failed on site %site with error %error', array('%site' => $site->title, '%error' => $response->error), WATCHDOG_NOTICE);
-      continue; // don't update the timestamp
-    }
-*/
-
     // We are updating the site table here directly to avoid a possible race condition,
     // with the task queue. There exists a chance that they might both try to save the
     // same node at the same time, and then an old record from the cron queue might
@@ -105,7 +97,7 @@ function hosting_civicrm_cron_site_count() {
   foreach ($platforms as $key => $nid) {
     $count += hosting_site_count($nid);
   }
- 
+
   return $count;
 }
 
@@ -115,8 +107,8 @@ function hosting_civicrm_cron_site_count() {
 function hosting_civicrm_cron_get_platforms() {
   //TODO: cache the result
   $package_id = db_result(db_query('SELECT nid FROM {hosting_package} WHERE short_name = "%s"', 'civicrm'));
-  $result = db_query('SELECT nid FROM {hosting_platform} pl JOIN {hosting_package_instance} pkg ON pl.nid=pkg.rid WHERE pkg.package_id=%d', $package_id); 
-  
+  $result = db_query('SELECT nid FROM {hosting_platform} pl JOIN {hosting_package_instance} pkg ON pl.nid=pkg.rid WHERE pkg.package_id=%d', $package_id);
+
   $platforms = array();
   while ($nid = db_result($result)) {
     $platforms[] = $nid;
