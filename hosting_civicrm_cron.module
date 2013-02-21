@@ -38,7 +38,7 @@ function hosting_civicrm_cron_queue($count) {
     // only run the cron on CiviCRM >= 4.1. Normally civicrm.drush.inc will test for 4.1
     // and quietly exit otherwise (so we do not need to check here).
     drush_log(dt("Running CiviCRM cron on URL %url", array('%url' => $url)));
-    $result = provision_backend_invoke($site_name, "civicrm-api", array('Job.execute'));
+    $result = provision_backend_invoke($site_name, "civicrm-api", array('--user=1', 'Job.execute', 'auth=0'));
 
     if (! empty($result['error_status'])) {
       watchdog('hosting_civicrm_cron', t('ERROR: !error', array('!error' => $result['output'])));
