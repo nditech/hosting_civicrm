@@ -14,6 +14,11 @@ function hosting_civicrm_cron_schema_alter(&$schema) {
     'type' => 'int',
     'not null' => FALSE,
   );
+  $schema['hosting_site']['fields']['civicrm_cron_interval'] = array(
+    'type' => 'int',
+    'not null' => TRUE,
+    'default' => 0,
+  );
 }
 
 /**
@@ -22,7 +27,14 @@ function hosting_civicrm_cron_schema_alter(&$schema) {
 function hosting_civicrm_cron_install() {
   db_add_field($ret, 'hosting_site', 'last_civicrm_cron', array(
     'type' => 'int',
-    'not null' => FALSE,)
+    'not null' => FALSE,
+    )
+  );
+  db_add_field($ret, 'hosting_site', 'civicrm_cron_interval', array(
+    'type' => 'int',
+    'not null' => FALSE,
+    'default' => 0,
+    )
   );
 }
 
@@ -31,4 +43,21 @@ function hosting_civicrm_cron_install() {
  */
 function hosting_civicrm_cron_uninstall() {
   db_drop_field($ret, 'hosting_site', 'last_civicrm_cron');
+  db_drop_field($ret, 'hosting_site', 'civicrm_cron_interval');
+  variable_del('hosting_civicrm_cron_default_interval');
 }
+
+/**
+ * Implements hook_update_N().
+ */
+function hosting_civicrm_cron_update_6001() {
+  $ret = array();
+  db_add_field($ret, 'hosting_site', 'civicrm_cron_interval', array(
+    'type' => 'int',
+    'not null' => FALSE,
+    'default' => 0,
+    )
+  );
+  return $ret;
+}
+
