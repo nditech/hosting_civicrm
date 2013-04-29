@@ -12,7 +12,7 @@ function hosting_civicrm_cron_hosting_queues() {
     'type' => 'batch',
     'name' => t('CiviCRM cron queue'),
     'description' => t('Run cron on hosted CiviCRM sites.'),
-    'total_items' => hosting_civicrm_cron_site_count(),
+    'total_items' => hosting_civicrm_site_count(),
     'frequency' => strtotime("1 hour", 0),
     'min_threads' => 6,
     'max_threads' => 12,
@@ -27,7 +27,7 @@ function hosting_civicrm_cron_hosting_queues() {
  * Implementation of hosting_QUEUE_TYPE_queue().
  */
 function hosting_civicrm_cron_queue($count) {
-  $sites = hosting_civicrm_cron_get_sites('last_civicrm_cron');
+  $sites = hosting_civicrm_get_sites('last_civicrm_cron');
   foreach ($sites as $nid) {
     $site = node_load($nid);
     $site_name = hosting_context_name($site->nid);
@@ -60,7 +60,7 @@ function hosting_civicrm_cron_queue($count) {
  */
 function hosting_civicrm_cron_nodeapi(&$node, $op, $a3 = null) {
   if ($node->type == 'site') {
-    if (in_array($node->platform, hosting_civicrm_cron_get_platforms())) {
+    if (in_array($node->platform, hosting_civicrm_get_platforms())) {
       switch ($op) {
         case 'load':
           $node->last_civicrm_cron = _last_civicrm_cron($node->nid);
