@@ -58,3 +58,12 @@ function hosting_civicrm_get_sites($order_by = null) {
 
   return $sites;
 }
+
+/**
+ * Helper function to determine whether a platform contains CiviCRM
+ */
+function _is_civicrm_platform($nid) {
+  return in_array($nid, hosting_civicrm_get_platforms());
+}
+
+
