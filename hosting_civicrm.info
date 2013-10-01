@@ -1,5 +1,5 @@
-name = Hosting CiviCRM API
-description = Provides an API for other Hosting extensions to manage CiviCRM sites. This module does not expose a UI, and so won't be of much use on its own. Only enable if another module requires it.
-package = Hosting
+name = Hosting CiviCRM
+description = Enables installation and maintenance of CiviCRM on sites.
+package = Aegir CiviCRM
 dependencies[] = hosting
 core = 6.x
