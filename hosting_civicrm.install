@@ -9,31 +9,27 @@
  * Implements hook_schema_alter().
  */
 function hosting_civicrm_schema_alter(&$schema) {
-  // Add field to existing schema.
-  $schema['hosting_site']['fields']['civicrm_version'] = array(
-    'type' => 'int',
-    'not null' => FALSE,
-    'default' => NULL,
-  );
 }
 
 /**
  * Implements hook_install().
  */
 function hosting_civicrm_install() {
-  db_add_field($ret, 'hosting_site', 'civicrm_version', array(
-    'type' => 'varchar',
-    'length' => 32,
-    'not null' => FALSE,
-    'default' => NULL,
-    )
-  );
 }
 
 /**
  * Implements hook_uninstall().
  */
 function hosting_civicrm_uninstall() {
-  db_drop_field($ret, 'hosting_site', 'civicrm_version');
 }
 
+/**
+ * Implements hook_update_N().
+ *
+ * Remove the civicrm_version field from hosting_sites.
+ */
+function hosting_civicrm_update_6001() {
+  $ret = array();
+  $ret[] = db_drop_field($ret, 'hosting_site', 'civicrm_version');
+  return $ret;
+}

@@ -19,16 +19,6 @@ function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
       );
     }
   }
-
-  // Setting this initially may need to move to a submit/validate handler,
-  // since hosting_civicrm_get_version() may need to know the platform first.
-  _hosting_site_field($form, $node, 'civicrm_version', array(
-    // This field is read-only
-    '#type' => 'hidden',
-    '#required' => TRUE,
-    '#default_value' => $form['#node']->civicrm_version ? $form['#node']->civicrm_version : hosting_civicrm_get_version(),
-  ));
-
 }
 
 /**
@@ -37,24 +27,15 @@ function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
 function hosting_civicrm_nodeapi(&$node, $op) {
   if ($node->type == 'site') {
     switch ($op) {
-      case 'insert':
-      case 'update':
-        if (isset($node->civicrm_version)) {
-          $civicrm_version = $node->civicrm_version;
-          $site_name = $node->title;
-          $site_nid = $node->nid;
-
-          $query = 'UPDATE {hosting_site} SET civicrm_version="%s" WHERE nid = %d';
-          $result = db_query($query, $civicrm_version, $site_nid);
-          if (!$result) {
-            drupal_set_message(t('[CIVICRM] Encountered problem updating the CiviCRM version to `!civicrm_version` on site `!site_name` (node/!site_nid). Attempted to run: `!query`.', array('!civicrm_version' => $civicrm_version, '!site_name' => $site_name, '!site_nid' => $site_nid, '!query' => sprintf($query, $civicrm_version, $site_nid))), 'error');
-          }
-        }
-        break;
-
       case 'load':
-        $query = 'SELECT civicrm_version FROM {hosting_site} WHERE nid = %d';
-        if ($result = db_result(db_query($query, $node->nid))) {
+        $query = 'SELECT max(version) as civicrm_version
+                    FROM hosting_package_instance hpi
+                    LEFT JOIN hosting_package pkg ON (pkg.nid = hpi.package_id)
+                   WHERE platform = %d
+                     and short_name = "%s"
+                     and status = 1';
+
+        if ($result = db_result(db_query($query, $node->platform, 'civicrm'))) {
           $node->civicrm_version = $result;
         }
         break;
