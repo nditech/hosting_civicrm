@@ -117,6 +117,8 @@ function _is_civicrm_platform($nid) {
 
 /**
  * Helper function to determine the version of CiviCRM available.
+ * DEPRECATED c.f. #2335909
+ * Remove after 2015-05-01.
  */
 function hosting_civicrm_get_version() {
   //TODO: confirm this is returning the proper version for our platform, etc.
