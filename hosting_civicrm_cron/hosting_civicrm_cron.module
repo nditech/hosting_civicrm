@@ -151,7 +151,7 @@ function hosting_civicrm_cron_form_hosting_settings_alter(&$form, $form_state) {
  * Add the CiviCRM cron interval setting to site node forms.
  */
 function hosting_civicrm_cron_form_site_node_form_alter(&$form, $form_state) {
-  if (user_access('configure site civicrm cron interval')) {
+  if (user_access('configure site CiviCRM cron intervals')) {
     if (isset($form['nid']['#value']) && _is_civicrm_platform($form['platform']['#value'])) {
       $form['civicrm_cron_interval'] = array(
         '#type' => 'select',
