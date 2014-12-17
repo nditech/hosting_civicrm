@@ -68,12 +68,19 @@ function hosting_civicrm_site_count() {
 }
 
 /**
- * Return an array of platforms that contain CiviCRM
+ * Return an array of active platforms that contain CiviCRM.
  */
 function hosting_civicrm_get_platforms() {
-  //TODO: cache the result
+  // Find the package ID for CiviCRM, which is unique accros all platforms.
   $package_id = db_result(db_query('SELECT nid FROM {hosting_package} WHERE short_name = "%s"', 'civicrm'));
-  $result = db_query('SELECT DISTINCT nid FROM {hosting_platform} pl JOIN {hosting_package_instance} pkg ON pl.nid=pkg.platform WHERE pkg.package_id=%d', $package_id);
+
+  // Find active platforms that have the package_id.
+  $result = db_query('SELECT DISTINCT nid FROM {hosting_platform} pl
+                       INNER JOIN {hosting_package_instance} pkg ON (pl.nid = pkg.platform)
+                       WHERE pkg.package_id = %d
+                         AND pl.status = %d',
+                      $package_id,
+                      HOSTING_PLATFORM_ENABLED);
 
   $platforms = array();
   while ($nid = db_result($result)) {
