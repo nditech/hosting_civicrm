@@ -9,7 +9,7 @@
  */
 function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
   // Display the CiviCRM version
-  if ($form['#node']->nid) {
+  if (! empty($form['#node']->nid)) {
     if ($form['#node']->civicrm_version) {
       $form['info']['civicrm_version'] = array(
         '#type' => 'item',
@@ -72,7 +72,7 @@ function hosting_civicrm_site_count() {
  */
 function hosting_civicrm_get_platforms() {
   // Find the package ID for CiviCRM, which is unique accros all platforms.
-  $package_id = db_result(db_query('SELECT nid FROM {hosting_package} WHERE short_name = "%s"', 'civicrm'));
+  $package_id = db_query('SELECT nid FROM {hosting_package} WHERE short_name = :short_name', array(':short_name' => 'civicrm'))->fetchField();
 
   // Find active platforms that have the package_id.
   $result = db_query('SELECT DISTINCT nid FROM {hosting_platform} pl
