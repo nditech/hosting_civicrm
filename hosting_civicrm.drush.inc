@@ -10,6 +10,13 @@ function hosting_civicrm_hosting_site_context_options(&$task) {
   else {
     $task->context_options['civicrm_version'] = 'null';
   }
+
+  if (isset($task->ref->civicrm_sitekey) && !empty($task->ref->civicrm_sitekey)) {
+    $task->context_options['civicrm_sitekey'] = $task->ref->civicrm_sitekey;
+  }
+  else {
+    $task->context_options['civicrm_sitekey'] = '';
+  }
 }
 
 /**
@@ -20,6 +27,9 @@ function hosting_civicrm_drush_context_import($context, &$node) {
     if (isset($context->civicrm_version) && !empty($context->civicrm_version)) {
       $node->civicrm_version = $context->civicrm_version;
     }
-  }
 
+    if (isset($context->civicrm_sitekey) && !empty($context->civicrm_sitekey)) {
+      $node->civicrm_sitekey = $context->civicrm_sitekey;
+    }
+  }
 }

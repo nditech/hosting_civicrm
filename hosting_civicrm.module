@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @file
  *   Hosting CiviCRM API functions, and Drupal hooks.
@@ -18,6 +19,16 @@ function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
         '#required' => FALSE,
       );
     }
+
+    if ($form['#node']->civicrm_sitekey) {
+      $form['civicrm_sitekey'] = array(
+        '#type' => 'textfield',
+        '#title' => t('CiviCRM site key'),
+        '#default_value' => $form['#node']->civicrm_sitekey,
+        '#required' => FALSE,
+        '#weight' => 11,
+      );
+    }
   }
 }
 
@@ -28,6 +39,7 @@ function hosting_civicrm_nodeapi(&$node, $op) {
   if ($node->type == 'site') {
     switch ($op) {
       case 'load':
+        // Get the CiviCRM package version from the platform.
         $query = 'SELECT max(version) as civicrm_version
                     FROM hosting_package_instance hpi
                     LEFT JOIN hosting_package pkg ON (pkg.nid = hpi.package_id)
@@ -38,6 +50,10 @@ function hosting_civicrm_nodeapi(&$node, $op) {
         if ($result = db_query($query, array(':platform' => $node->platform, ':short_name' => 'civicrm'))->fetchField()) {
           $node->civicrm_version = $result;
         }
+
+        // Get the CiviCRM site key
+        $node->civicrm_sitekey = db_result(db_query('SELECT civicrm_sitekey FROM hosting_site WHERE nid = %d', $node->nid));
+
         break;
 
       case 'view':
@@ -48,6 +64,26 @@ function hosting_civicrm_nodeapi(&$node, $op) {
             '#value' => $node->civicrm_version,
           );
         }
+
+        if (isset($node->civicrm_sitekey)) {
+          $node->content['info']['civicrm_sitekey'] = array(
+            '#type' => 'item',
+            '#title' => t('CiviCRM site key'),
+            '#value' => $node->civicrm_sitekey,
+          );
+        }
+        break;
+
+      case 'update':
+      case 'insert':
+        $sitekey = $node->civicrm_sitekey;
+
+        if (empty($sitekey)) {
+          // Adapted from civicrm/install/civicrm.php
+          $sitekey = md5(rand() . mt_rand() . rand() . uniqid('', TRUE) . $params['baseURL']);
+        }
+
+        db_query('UPDATE {hosting_site} SET civicrm_sitekey = "%s" WHERE nid = %d', $sitekey, $node->nid);
         break;
     }
   }
