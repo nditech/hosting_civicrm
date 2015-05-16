@@ -20,7 +20,7 @@ function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
       );
     }
 
-    if ($form['#node']->civicrm_sitekey) {
+    if ($form['#node']->civicrm_version && $form['#node']->civicrm_sitekey) {
       $form['civicrm_sitekey'] = array(
         '#type' => 'textfield',
         '#title' => t('CiviCRM site key'),
@@ -65,7 +65,7 @@ function hosting_civicrm_nodeapi(&$node, $op) {
           );
         }
 
-        if (isset($node->civicrm_sitekey)) {
+        if (isset($node->civicrm_version) && isset($node->civicrm_sitekey)) {
           $node->content['info']['civicrm_sitekey'] = array(
             '#type' => 'item',
             '#title' => t('CiviCRM site key'),
