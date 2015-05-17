@@ -24,6 +24,7 @@ function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
       $form['civicrm_sitekey'] = array(
         '#type' => 'textfield',
         '#title' => t('CiviCRM site key'),
+        '#description' => t('The site key enables access to the CiviCRM REST API, in combination with a user API key. Leave this empty to generate a new random API site key. For more information, refer to the <a href="!url">CiviCRM REST interface documentation</a>.', array('!url' => 'http://wiki.civicrm.org/confluence/display/CRMDOC/REST+interface')),
         '#default_value' => $form['#node']->civicrm_sitekey,
         '#required' => FALSE,
         '#weight' => 11,
@@ -79,14 +80,18 @@ function hosting_civicrm_nodeapi(&$node, $op) {
 
       case 'update':
       case 'insert':
-        $sitekey = $node->civicrm_sitekey;
+        // Avoid creating a site key for Drupal-only site.
+        if (isset($node->civicrm_sitekey)) {
+          $sitekey = $node->civicrm_sitekey;
 
-        if (empty($sitekey)) {
-          // Adapted from civicrm/install/civicrm.php
-          $sitekey = md5(rand() . mt_rand() . rand() . uniqid('', TRUE) . $params['baseURL']);
+          if (empty($sitekey)) {
+            // Adapted from civicrm/install/civicrm.php
+            $sitekey = md5(rand() . mt_rand() . rand() . uniqid('', TRUE) . $params['baseURL']);
+          }
+
+          db_query('UPDATE {hosting_site} SET civicrm_sitekey = "%s" WHERE nid = %d', $sitekey, $node->nid);
         }
 
-        db_query('UPDATE {hosting_site} SET civicrm_sitekey = "%s" WHERE nid = %d', $sitekey, $node->nid);
         break;
     }
   }
