@@ -40,6 +40,9 @@ function hosting_civicrm_nodeapi(&$node, $op) {
     switch ($op) {
       case 'load':
         // Get the CiviCRM package version from the platform.
+        //
+        // The presence of the version is also a check used later to know
+        // if a site has CiviCRM installed (ex: whether to show the sitekey).
         $query = 'SELECT max(version) as civicrm_version
                     FROM hosting_package_instance hpi
                     LEFT JOIN hosting_package pkg ON (pkg.nid = hpi.package_id)
@@ -49,10 +52,10 @@ function hosting_civicrm_nodeapi(&$node, $op) {
 
         if ($result = db_query($query, array(':platform' => $node->platform, ':short_name' => 'civicrm'))->fetchField()) {
           $node->civicrm_version = $result;
-        }
 
-        // Get the CiviCRM site key
-        $node->civicrm_sitekey = db_result(db_query('SELECT civicrm_sitekey FROM hosting_site WHERE nid = %d', $node->nid));
+          // Get the CiviCRM site key
+          $node->civicrm_sitekey = db_result(db_query('SELECT civicrm_sitekey FROM hosting_site WHERE nid = %d', $node->nid));
+        }
 
         break;
 
