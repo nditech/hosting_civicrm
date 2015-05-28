@@ -54,7 +54,7 @@ function hosting_civicrm_nodeapi(&$node, $op) {
           $node->civicrm_version = $result;
 
           // Get the CiviCRM site key
-          $node->civicrm_sitekey = db_result(db_query('SELECT civicrm_sitekey FROM hosting_site WHERE nid = %d', $node->nid));
+          $node->civicrm_sitekey = db_query('SELECT civicrm_sitekey FROM hosting_site WHERE nid = :nid', array(':nid' => $node->nid))->fetchField();
         }
 
         break;
