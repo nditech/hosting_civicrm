@@ -122,7 +122,9 @@ function hosting_civicrm_cron_node_view($node, $view_mode, $langcode) {
 }
 
 function hosting_civicrm_cron_node_update($node) {
-  db_query('UPDATE {hosting_site} SET civicrm_cron_interval = :interval WHERE nid = :nid', array(':interval' => $node->civicrm_cron_interval, ':nid' => $node->nid));
+  if (isset($node->civicrm_cron_interval)) {
+    db_query('UPDATE {hosting_site} SET civicrm_cron_interval = :interval WHERE nid = :nid', array(':interval' => $node->civicrm_cron_interval, ':nid' => $node->nid));
+  }
 }
 
 /**
