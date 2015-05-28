@@ -89,7 +89,7 @@ function hosting_civicrm_nodeapi(&$node, $op) {
             $sitekey = md5(rand() . mt_rand() . rand() . uniqid('', TRUE) . $params['baseURL']);
           }
 
-          db_query('UPDATE {hosting_site} SET civicrm_sitekey = "%s" WHERE nid = %d', $sitekey, $node->nid);
+          db_query('UPDATE {hosting_site} SET civicrm_sitekey = :sitekey WHERE nid = :nid', array(':sitekey' => $sitekey, ':nid' => $node->nid));
         }
 
         break;
