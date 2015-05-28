@@ -43,7 +43,7 @@ function hosting_civicrm_uninstall() {
  */
 function hosting_civicrm_update_7001() {
   $ret = array();
-  if (db_field_exists('hosting_site', 'civicrm_version') {
+  if (db_field_exists('hosting_site', 'civicrm_version')) {
     $ret[] = db_drop_field('hosting_site', 'civicrm_version');
   } 
   return $ret;
@@ -56,7 +56,7 @@ function hosting_civicrm_update_7001() {
  */
 function hosting_civicrm_update_7002() {
   $ret = array();
-  if (! db_field_exists('hosting_site', 'civicrm_sitekey') {
+  if (! db_field_exists('hosting_site', 'civicrm_sitekey')) {
     $ret[] = db_add_field('hosting_site', 'civicrm_sitekey', array(
       'type' => 'varchar',
       'length' => 128,
