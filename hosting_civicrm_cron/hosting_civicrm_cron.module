@@ -76,45 +76,53 @@ function hosting_civicrm_cron_perm() {
   return array('configure site CiviCRM cron intervals');
 }
 
-
 /**
- * Implementation of hook_nodeapi().
+ * Implements hook_node_load().
  */
-function hosting_civicrm_cron_nodeapi(&$node, $op, $a3 = null) {
-  if ($node->type == 'site') {
+function hosting_civicrm_cron_node_load($nodes, $types) {
+  if (! in_array('site', $types)) {
+    return;
+  }
+
+  foreach ($nodes as $node) {
+    if ($node->type != 'site') {
+      continue;
+    }
+
     if (in_array($node->platform, hosting_civicrm_get_platforms())) {
-      switch ($op) {
-        case 'load':
-          $node->last_civicrm_cron = _last_civicrm_cron($node->nid);
+      $node->last_civicrm_cron = _last_civicrm_cron($node->nid);
 
-          // When loading a site node, fetch the site's CiviCRM cron interval
-          // from the database.
-          $result = db_result(db_query('SELECT civicrm_cron_interval FROM {hosting_site} WHERE nid = %d', $node->nid));
+      // When loading a site node, fetch the site's CiviCRM cron interval
+      // from the database.
+      $result = db_query('SELECT civicrm_cron_interval FROM {hosting_site} WHERE nid = :nid', array(':nid' => $node->nid))->fetchField();
 
-          // If no specific cron interval was set for this site, use the default.
-          $node->civicrm_cron_interval = $result ? $result : variable_get('hosting_civicrm_cron_default_interval', 3600);
-
-          break;
-        case 'view':
-          if (!$a3) {
-            $cron_text = $node->civicrm_cron_interval == HOSTING_CIVICRM_CRON_SITE_DISABLED ? t('Disabled') : t('Every !interval', array('!interval' => format_interval($node->civicrm_cron_interval)));
-            $cron_text .= '<br />' . t('(Last run: !interval)', array('!interval' => hosting_format_interval($node->last_civicrm_cron)));
-            $node->content['info']['last_civicrm_cron'] = array(
-              '#type' => 'item',
-              '#title' => t('CiviCRM cron run'),
-              '#weight' => 20,
-              '#value' => $cron_text,
-            );
-          }
-          break;
-        case 'update':
-        case 'insert':
-          db_query('UPDATE {hosting_site} SET civicrm_cron_interval = %d WHERE nid= %d', $node->civicrm_cron_interval, $node->nid);
-          break;
-
-      }
+      // If no specific cron interval was set for this site, use the default.
+      $node->civicrm_cron_interval = $result ? $result : variable_get('hosting_civicrm_cron_default_interval', 3600);
     }
   }
+}
+
+/**
+ * Implements hook_node_view().
+ */
+function hosting_civicrm_cron_node_view($node, $view_mode, $langcode) {
+  if (! isset($node->civicrm_cron_interval)) {
+    return;
+  }
+
+  $cron_text = $node->civicrm_cron_interval == HOSTING_CIVICRM_CRON_SITE_DISABLED ? t('Disabled') : t('Every !interval', array('!interval' => format_interval($node->civicrm_cron_interval)));
+  $cron_text .= '<br />' . t('(Last run: !interval)', array('!interval' => hosting_format_interval($node->last_civicrm_cron)));
+
+  $node->content['info']['last_civicrm_cron'] = array(
+    '#type' => 'item',
+    '#title' => t('CiviCRM cron run'),
+    '#weight' => 20,
+    '#markup' => $cron_text,
+  );
+}
+
+function hosting_civicrm_cron_node_update($node) {
+  db_query('UPDATE {hosting_site} SET civicrm_cron_interval = :interval WHERE nid = :nid', array(':interval' => $node->civicrm_cron_interval, ':nid' => $node->nid));
 }
 
 /**
@@ -188,7 +196,7 @@ function hosting_civicrm_cron_interval_options() {
  * Return the last CiviCRM cron for a site
  */
 function _last_civicrm_cron($nid) {
-  return db_result(db_query('SELECT last_civicrm_cron FROM {hosting_site} WHERE nid = %d', $nid));
+  return db_query('SELECT last_civicrm_cron FROM {hosting_site} WHERE nid = :nid', array(':nid' => $nid))->fetchField();
 }
 
 /**
@@ -204,19 +212,22 @@ function hosting_civicrm_cron_get_sites($limit = 5) {
   foreach ($platforms as $platform_id) {
     $result = db_query("SELECT n.nid, hs.last_civicrm_cron, hs.civicrm_cron_interval
                       FROM {node} n
-                      JOIN {hosting_site} hs
-                      ON n.nid = hs.nid
+                      JOIN {hosting_site} hs ON n.nid = hs.nid
                       WHERE n.type = 'site'
-                      AND hs.status = %d
-                      AND hs.civicrm_cron_interval != %d
-                      AND hs.platform = %d
-                      ORDER BY hs.last_civicrm_cron ASC, n.nid ASC",
-                      HOSTING_SITE_ENABLED,
-                      HOSTING_CIVICRM_CRON_SITE_DISABLED,
-                      $platform_id
-                    );
+                        AND hs.status = :status
+                        AND hs.civicrm_cron_interval != :cron_disabled
+                        AND hs.platform = :platform_id
+                      ORDER BY hs.last_civicrm_cron ASC, n.nid ASC", array(
+                      ':status' => HOSTING_SITE_ENABLED,
+                      ':cron_disabled' => HOSTING_CIVICRM_CRON_SITE_DISABLED,
+                      ':platform_id' => $platform_id
+    ));
 
-    while (($site = db_fetch_object($result)) && (count($sites) <= $limit)) {
+    foreach ($result as $site) {
+      if (count($sites) > $limit) {
+        break;
+      }
+
       // Determine the CiviCRM cron interval. If not specified for this site,
       // use the default CiviCRM cron interval value.
       $civicrm_cron_interval = $site->civicrm_cron_interval ? $site->civicrm_cron_interval : variable_get('hosting_civicrm_cron_default_interval', 3600);
