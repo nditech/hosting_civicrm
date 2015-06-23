@@ -22,17 +22,18 @@ function hosting_civicrm_cron_init() {
  */
 function hosting_civicrm_cron_hosting_queues() {
   $queue['civicrm_cron'] = array(
-    'type' => variable_get('hosting_civicrm_cron_queue_type' ,'batch'),
     'name' => t('CiviCRM cron queue'),
     'description' => t('Run cron on hosted CiviCRM sites.') . '<br />' . t('You can set a default interval on the !settings', array('!settings' => l('settings page', 'admin/hosting/settings'))),
-    'total_items' => hosting_civicrm_site_count(),
-    'items' => 5,
+    'type' => variable_get('hosting_civicrm_cron_queue_type', 'serial'),
     'frequency' => strtotime("1 hour", 0),
+    'items' => 5,
+    'total_items' => hosting_civicrm_site_count(),
     'min_threads' => 6,
     'max_threads' => 12,
     'threshold' => 100,
     'singular' => t('CiviCRM site'),
     'plural' => t('CiviCRM sites'),
+    'running_items' => hosting_task_count_running(),
   );
   return $queue;
 }
@@ -42,30 +43,30 @@ function hosting_civicrm_cron_hosting_queues() {
  */
 function hosting_civicrm_cron_queue($count) {
   $sites = hosting_civicrm_cron_get_sites();
+
   foreach ($sites as $nid) {
     $site = node_load($nid);
     $site_name = hosting_context_name($site->nid);
-    $url = _hosting_site_url($site) . '/index.php';
 
     // Issue #1613484
     // read http://wiki.civicrm.org/confluence/display/CRMDOC41/Managing+Scheduled+Jobs
     // only run the cron on CiviCRM >= 4.1. Normally civicrm.drush.inc will test for 4.1
     // and quietly exit otherwise (so we do not need to check here).
-    drush_log(dt("Running CiviCRM cron on URL %url", array('%url' => $url)));
+    drush_log(dt("Running CiviCRM cron on !site", array('!site' => $site_name)), 'ok');
     $result = provision_backend_invoke($site_name, "civicrm-api", array('--user=1', 'Job.execute', 'auth=0'));
 
     if (! empty($result['error_status'])) {
-      watchdog('hosting_civicrm_cron', t('ERROR: !error', array('!error' => $result['output'])));
+      drush_log(dt('ERROR: !error', array('!error' => $result['output'])), 'error');
     }
     else {
-      watchdog('hosting_civicrm_cron', t('CiviCRM cron run was successful.'));
+      drush_log(dt('CiviCRM cron run for !site was successful.', array('!site' => $site_name)), 'ok');
     }
 
     // We are updating the site table here directly to avoid a possible race condition,
     // with the task queue. There exists a chance that they might both try to save the
     // same node at the same time, and then an old record from the cron queue might
     // replace the newly updated record.
-    db_query("UPDATE {hosting_site} SET last_civicrm_cron=%d WHERE nid=%d", mktime(), $nid);
+    db_query("UPDATE {hosting_site} SET last_civicrm_cron=:time WHERE nid=:nid", array(':time' => mktime(), ':nid' => $nid));
   }
 }
 
