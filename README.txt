@@ -1,6 +1,9 @@
 Hosting CiviCRM
 ===============
 
+This is the front-end Aegir module to manage CiviCRM in Aegir.
+It manages the CiviCRM crons (using the hosting_civicrm_cron submodule)
+and the CiviCRM API site key.
 
 Built with Aegir up [1] by Ergon Logic Enterprises [2] for use with
 CiviCRM [3] and Provision CiviCRM [4] on the Aegir Hosting System [5].
@@ -25,3 +28,10 @@ If you are using the Debian package for Aegir and you would like to
 automate the installation of the module on new Aegir installs, you 
 should use a custom makefile so that the module is not lost after an upgrade:
 http://community.aegirproject.org/upgrading/debian#Custom_distributions
+
+Debugging
+=========
+
+If you are having problems running the crons, try:
+
+  drush '@hostmaster' hosting-civicrm_cron --items=5 --debug --strict=0

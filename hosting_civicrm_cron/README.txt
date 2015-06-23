@@ -32,7 +32,4 @@ If not, you can run:
 
     drush @hostmaster en hosting_civicrm_cron -y
 
-If you are using the Debian package for Aegir and you would like to
-automate the installation of the module on new Aegir installs, you 
-should use a custom makefile so that the module is not lost after an upgrade:
-http://community.aegirproject.org/upgrading/debian#Custom_distributions
+For more information, see the main README.txt in hosting_civicrm.
