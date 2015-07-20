@@ -22,7 +22,7 @@ function hosting_civicrm_schema_alter(&$schema) {
  * Implements hook_install().
  */
 function hosting_civicrm_install() {
-  db_add_field($ret, 'hosting_site', 'civicrm_sitekey', array(
+  db_add_field('hosting_site', 'civicrm_sitekey', array(
     'type' => 'varchar',
     'length' => 128,
     'not null' => FALSE,
