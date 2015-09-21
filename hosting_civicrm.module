@@ -9,18 +9,17 @@
  * Implements hook_form_FORM_ID_alter().
  */
 function hosting_civicrm_form_site_node_form_alter(&$form, &$form_state) {
-  // Display the CiviCRM version
   if (! empty($form['#node']->nid)) {
     if (isset($form['#node']->civicrm_version)) {
+      // Display the CiviCRM version
       $form['info']['civicrm_version'] = array(
         '#type' => 'item',
         '#title' => t('CiviCRM version'),
-        '#value' => $form['#node']->civicrm_version,
+        '#markup' => $form['#node']->civicrm_version,
         '#required' => FALSE,
       );
-    }
 
-    if (isset($form['#node']->civicrm_version) && isset($form['#node']->civicrm_sitekey)) {
+      // Allow editing the CiviCRM site key
       $form['civicrm_sitekey'] = array(
         '#type' => 'textfield',
         '#title' => t('CiviCRM site key'),
@@ -50,12 +49,13 @@ function hosting_civicrm_node_load($nodes, $types) {
     //
     // The presence of the version is also a check used later to know
     // if a site has CiviCRM installed (ex: whether to show the sitekey).
-    $query = 'SELECT max(version) as civicrm_version
+    $query = 'SELECT version as civicrm_version
                 FROM hosting_package_instance hpi
                 LEFT JOIN hosting_package pkg ON (pkg.nid = hpi.package_id)
                WHERE platform = :platform
                  and short_name = :short_name
-                 and status = 1';
+                 and status = 1
+               ORDER BY iid DESC';
 
     if ($result = db_query($query, array(':platform' => $node->platform, ':short_name' => 'civicrm'))->fetchField()) {
       $node->civicrm_version = $result;
