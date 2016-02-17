@@ -487,16 +487,14 @@ function provision_civicrm_regenerate_settings_file($dbuser, $dbpass, $dbhost, $
 
   // #2411137 NB: this tests the Drush version, not Drupal.
   switch ($drush_major_version) {
-    case '7':
-      $sql = drush_get_class('Drush\Sql\Sql', array(), array(drush_drupal_major_version()));
-      $db_spec = $sql->get_db_spec();
-      break;
-    case '6':
     case '5':
+    case '6':
       $db_spec = _drush_sql_get_db_spec();
       break;
     default:
-      drush_set_error('DRUSH_UNSUPPORTED_VERSION', dt('Drush !version is not supported', array('!version' => DRUSH_VERSION)));
+      $sql = drush_get_class('Drush\Sql\Sql', array(), array(drush_drupal_major_version()));
+      $db_spec = $sql->get_db_spec();
+      break;
   }
 
   // Check version: since 4.1, Drupal6 must be used for the UF in D6
