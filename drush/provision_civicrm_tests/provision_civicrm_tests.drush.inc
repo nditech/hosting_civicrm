@@ -40,7 +40,6 @@ function drush_provision_civicrm_tests_run() {
 
     provision_civicrm_tests_install_platform('civicrm44d7');
     provision_civicrm_tests_install_platform('civicrm46d7');
-    provision_civicrm_tests_install_platform('civicrm46d6');
     provision_civicrm_tests_install_platform('civicrm47d7');
 
     provision_civicrm_tests_001_install_and_delete();
@@ -63,7 +62,6 @@ function drush_provision_civicrm_tests_run() {
 
   provision_civicrm_tests_remove_platform('civicrm44d7');
   provision_civicrm_tests_remove_platform('civicrm46d7');
-  provision_civicrm_tests_remove_platform('civicrm46d6');
   provision_civicrm_tests_remove_platform('civicrm47d7');
 
   // Restore the tasks queue status:
@@ -92,8 +90,8 @@ function provision_civicrm_tests_001_install_and_delete() {
   provision_civicrm_tests_install_site('civicrm46d7', 'civicrm46d7-standard');
   provision_civicrm_tests_remove_site('civicrm46d7-standard');
 
-  provision_civicrm_tests_install_site('civicrm46d6', 'civicrm46d6-standard', 'default');
-  provision_civicrm_tests_remove_site('civicrm46d6-standard');
+  provision_civicrm_tests_install_site('civicrm47d7', 'civicrm47d7-standard');
+  provision_civicrm_tests_remove_site('civicrm47d7-standard');
 }
 
 function provision_civicrm_tests_002_basic_migrations() {
