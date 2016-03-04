@@ -28,21 +28,6 @@ function provision_civicrm_tests_drush_command() {
  */
 function drush_provision_civicrm_tests_run() {
   $error_detected = FALSE;
-  $drupal5_tests = FALSE;
-
-/*
-  if (version_compare(PHP_VERSION, '5.3.0', '<')) {
-    $drupal5_tests = TRUE;
-  }
-  else {
-    $drupal5_tests = FALSE;
-    drush_log(dt('Please note that because you are running PHP 5.3 or greater, you cannot test installing Drupal 5 on this machine.'), 'warning');
-  }
-
-  if (!drush_confirm(dt('This command should only be run on a clean Aegir install, and data may be lost! Do you want to continue?'))) {
-    return drush_user_abort();
-  }
-*/
 
   // Disable the tasks queue, we run them manually instead.
   $queue_status_initial = variable_get('hosting_queue_tasks_enabled', '0');
@@ -53,15 +38,15 @@ function drush_provision_civicrm_tests_run() {
     drush_log(dt('***** CiviCRM TEST: creating platforms.'), 'ok');
     drush_log(dt('*****'), 'ok');
 
-    // provision_civicrm_tests_install_platform('civicrm44d6');
-    // provision_civicrm_tests_install_platform('civicrm46d6');
-    provision_civicrm_tests_install_platform('civicrm42d7');
     provision_civicrm_tests_install_platform('civicrm43d7');
     provision_civicrm_tests_install_platform('civicrm44d7');
+    provision_civicrm_tests_install_platform('civicrm46d7');
+    provision_civicrm_tests_install_platform('civicrm46d6');
+    provision_civicrm_tests_install_platform('civicrm47d7');
 
     provision_civicrm_tests_001_install_and_delete();
-    provision_civicrm_tests_002_basic_migrations_d7();
-    provision_civicrm_tests_003_basic_migrations_d6_to_d7();
+    provision_civicrm_tests_002_basic_migrations();
+    # provision_civicrm_tests_003_major_upgrades();
 
     // TODO: test the multi-lingual upgrade
   }
@@ -77,13 +62,11 @@ function drush_provision_civicrm_tests_run() {
   drush_log(dt('***** CiviCRM TEST: Removing platforms.'), 'ok');
   drush_log(dt('*****'), 'ok');
 
-  // provision_civicrm_tests_remove_platform('civicrm34d6');
-  // provision_civicrm_tests_remove_platform('civicrm40d7');
-  // provision_civicrm_tests_remove_platform('civicrm41d6');
-  // provision_civicrm_tests_remove_platform('civicrm41d7');
-  provision_civicrm_tests_remove_platform('civicrm42d7');
   provision_civicrm_tests_remove_platform('civicrm43d7');
   provision_civicrm_tests_remove_platform('civicrm44d7');
+  provision_civicrm_tests_remove_platform('civicrm46d7');
+  provision_civicrm_tests_remove_platform('civicrm46d6');
+  provision_civicrm_tests_remove_platform('civicrm47d7');
 
   // Restore the tasks queue status:
   variable_set('hosting_queue_tasks_enabled', $queue_status_initial);
@@ -105,94 +88,65 @@ function provision_civicrm_tests_001_install_and_delete() {
   drush_log(dt('*****'), 'ok');
 
   // Install some sites.
-  // provision_civicrm_tests_install_site('civicrm34d6', 'civicrm34d6-default', 'default');
-  // provision_civicrm_tests_install_site('civicrm41d6', 'civicrm41d6-default', 'default');
-  // provision_civicrm_tests_install_site('civicrm40d7', 'civicrm40d7-standard', 'standard');
-  // provision_civicrm_tests_install_site('civicrm41d7', 'civicrm41d7-standard', 'standard');
+  provision_civicrm_tests_install_site('civicrm43d7', 'civicrm43d7-standard');
+  provision_civicrm_tests_remove_site('civicrm43d7-standard');
 
-  provision_civicrm_tests_install_site('civicrm42d7', 'civicrm42d7-standard', 'standard');
-  provision_civicrm_tests_remove_site('civicrm42d7-standard');
-
-  provision_civicrm_tests_install_site('civicrm44d7', 'civicrm44d7-standard', 'standard');
+  provision_civicrm_tests_install_site('civicrm44d7', 'civicrm44d7-standard');
   provision_civicrm_tests_remove_site('civicrm44d7-standard');
 
-  provision_civicrm_tests_install_site('civicrm46d7', 'civicrm46d7-standard', 'standard');
+  provision_civicrm_tests_install_site('civicrm46d7', 'civicrm46d7-standard');
   provision_civicrm_tests_remove_site('civicrm46d7-standard');
 
-  // Delete the sites.
-  // provision_civicrm_tests_remove_site('civicrm34d6-default');
-  // provision_civicrm_tests_remove_site('civicrm41d6-default');
-  // provision_civicrm_tests_remove_site('civicrm40d7-standard');
-  // provision_civicrm_tests_remove_site('civicrm41d7-standard');
+  provision_civicrm_tests_install_site('civicrm46d6', 'civicrm46d6-standard');
+  provision_civicrm_tests_remove_site('civicrm46d6-standard');
 }
 
-function provision_civicrm_tests_002_basic_migrations_d7() {
-  // Create some sites and migrate them.
-  // Test migrate from 4.2-D7 to 4.2-D7
-  drush_log(dt('*****'), 'ok');
-  drush_log(dt('***** CiviCRM TEST: migrate from 4.2-D7 to 4.2-D7.'), 'ok');
-  drush_log(dt('*****'), 'ok');
-
-  provision_civicrm_tests_install_platform('civicrm42d7', 'civicrm42d7_other');
-  provision_civicrm_tests_install_site('civicrm42d7', 'civicrm42d7-test-migrate', 'standard');
-  provision_civicrm_tests_migrate_site('civicrm42d7-test-migrate', 'civicrm42d7_other');
-  provision_civicrm_tests_remove_site('civicrm42d7-test-migrate');
-  provision_civicrm_tests_remove_platform('civicrm42d7_other');
-
+function provision_civicrm_tests_002_basic_migrations() {
   // Test migrate from 4.3-D7 to 4.3-D7
   drush_log(dt('*****'), 'ok');
   drush_log(dt('***** CiviCRM TEST: migrate from 4.3-D7 to 4.3-D7.'), 'ok');
   drush_log(dt('*****'), 'ok');
 
   provision_civicrm_tests_install_platform('civicrm43d7', 'civicrm43d7_other');
-  provision_civicrm_tests_install_site('civicrm43d7', 'civicrm43d7-test-migrate', 'standard');
+  provision_civicrm_tests_install_site('civicrm43d7', 'civicrm43d7-test-migrate');
   provision_civicrm_tests_migrate_site('civicrm43d7-test-migrate', 'civicrm43d7_other');
   provision_civicrm_tests_remove_site('civicrm43d7-test-migrate');
   provision_civicrm_tests_remove_platform('civicrm43d7_other');
 
-  // Test migrate from 4.3-D7 to 4.3-D7
+  // Test migrate from 4.4-D7 to 4.4-D7
   drush_log(dt('*****'), 'ok');
-  drush_log(dt('***** CiviCRM TEST: migrate from 4.3-D7 to 4.3-D7.'), 'ok');
+  drush_log(dt('***** CiviCRM TEST: migrate from 4.4-D7 to 4.4-D7.'), 'ok');
   drush_log(dt('*****'), 'ok');
 
   provision_civicrm_tests_install_platform('civicrm44d7', 'civicrm44d7_other');
-  provision_civicrm_tests_install_site('civicrm44d7', 'civicrm44d7-test-migrate', 'standard');
+  provision_civicrm_tests_install_site('civicrm44d7', 'civicrm44d7-test-migrate');
   provision_civicrm_tests_migrate_site('civicrm44d7-test-migrate', 'civicrm44d7_other');
   provision_civicrm_tests_remove_site('civicrm44d7-test-migrate');
   provision_civicrm_tests_remove_platform('civicrm44d7_other');
 
-  // Test the CiviCRM 4.2-D7 to 4.4-D7 upgrade
+  // Test migrate from 4.6-D7 to 4.6-D7
   drush_log(dt('*****'), 'ok');
-  drush_log(dt('***** CiviCRM TEST: migrate from 4.2-D7 to 4.4-D7.'), 'ok');
+  drush_log(dt('***** CiviCRM TEST: migrate from 4.6-D7 to 4.6-D7.'), 'ok');
   drush_log(dt('*****'), 'ok');
 
-  provision_civicrm_tests_install_site('civicrm42d7', 'civicrm42d7-test-upgrade', 'standard');
-  provision_civicrm_tests_migrate_site('civicrm42d7-test-migrate', 'civicrm44d7');
-  provision_civicrm_tests_remove_site('civicrm42d7-test-upgrade');
+  provision_civicrm_tests_install_platform('civicrm46d7', 'civicrm46d7_other');
+  provision_civicrm_tests_install_site('civicrm46d7', 'civicrm46d7-test-migrate');
+  provision_civicrm_tests_migrate_site('civicrm46d7-test-migrate', 'civicrm46d7_other');
+  provision_civicrm_tests_remove_site('civicrm46d7-test-migrate');
+  provision_civicrm_tests_remove_platform('civicrm46d7_other');
 }
 
 /**
- * Test the CiviCRM 3.4-D6 to 4.3-D7 upgrade.
+ * Test upgrade from one CiviCRM version to another (ex: 4.4 to 4.6).
  */
-function provision_civicrm_tests_003_basic_migrations_d6_to_d7() {
+function provision_civicrm_tests_003_major_upgrades() {
   drush_log(dt('*****'), 'ok');
-  drush_log(dt('***** CiviCRM TEST: migrate from 3.4-D6 to 4.3-D7.'), 'ok');
-  drush_log(dt('*****'), 'ok');
-
-  provision_civicrm_tests_install_site('civicrm34d6', 'civicrm34d6-test-upgrade', 'default');
-  provision_civicrm_tests_migrate_site('civicrm34d6-test-migrate', 'civicrm43d7');
-  provision_civicrm_tests_remove_site('civicrm34d6-test-upgrade');
-
-  // Test the CiviCRM 3.4-D6 to 4.2-D7 upgrade
-/* FIXME: will d6 platforms work on PHP 5.6?
-  drush_log(dt('*****'), 'ok');
-  drush_log(dt('***** CiviCRM TEST: migrate from 3.4-D6 to 4.2-D7.'), 'ok');
+  drush_log(dt('***** CiviCRM TEST: migrate from 4.4-D7 to 4.6-D7.'), 'ok');
   drush_log(dt('*****'), 'ok');
 
-  provision_civicrm_tests_install_site('civicrm34d6', 'civicrm34d6-test-upgrade', 'default');
-  provision_civicrm_tests_migrate_site('civicrm34d6-test-migrate', 'civicrm42d7');
-  provision_civicrm_tests_remove_site('civicrm34d6-test-upgrade');
-*/
+  provision_civicrm_tests_install_site('civicrm44d7', 'civicrm44d7-test-upgrade');
+  provision_civicrm_tests_migrate_site('civicrm44d7-test-migrate', 'civicrm46d7');
+  provision_civicrm_tests_remove_site('civicrm44d7-test-upgrade');
 }
 
 /**
@@ -240,7 +194,7 @@ function provision_civicrm_tests_remove_platform($platform_name) {
 /**
  * Helper function to install a site.
  */
-function provision_civicrm_tests_install_site($platform_name, $site, $profile_name) {
+function provision_civicrm_tests_install_site($platform_name, $site, $profile_name = 'standard') {
   drush_log(dt('Installing: @site on platform: @platform with profile: @profile.', array('@site' => "$site.aegir.example.com", '@platform' => $platform_name, '@profile' => $profile_name)), 'ok');
 
   // For some reason, Aegir3/Debian configured me a 127.0.0.1 host for the db
