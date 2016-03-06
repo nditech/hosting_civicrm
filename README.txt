@@ -10,13 +10,23 @@ CiviCRM API site key, and so on.
 [2] http://www.aegirproject.org/
 
 
+Requirements
+============
+
+- Required: Aegir >= 3.x
+- Recommended: CiviCRM >= 4.4 (CiviCRM 4.2-4.4 are still tested but require a patch, see [14]).
+- Supports Drupal 6 and Drupal 7 (Drupal 8 will be supported)
+
+[14] https://github.com/mlutfy/hosting_civicrm/wiki/CiviCRM-version-support
+
 Installation
 ============
 
 As of version 3.2, this module has been included in the Aegir distribution, as
 part of the "Golden contrib" initiative. As such, it is automatically available
-to be enabled without the need to deploy any code. For older versions, follow
-these steps:
+to be enabled without the need to deploy any code.
+
+For older versions, follow these steps:
 
 - Copy the module to your /var/aegir/hostmaster/sites/aegir.example.org/modules/
 - Enable the module: drush @hostmaster en hosting_civicrm -y
@@ -73,6 +83,20 @@ or the Aegir project.
 You can also send the lead module maintainer a beer:
 
 * https://www.bidon.ca/en/paypal
+
+
+Patches and testing
+===================
+
+You can send a patch attached to an issue on drupal.org [11] or send a
+pull-request on Github [12].
+
+Pull-requests are not required, but have the added benefit of being tested
+automatically [13] against most CiviCRM versions that are supported.
+
+[11] https://drupal.org/project/issues/hosting_civicrm
+[12] https://github.com/mlutfy/hosting_civicrm
+[13] https://github.com/mlutfy/hosting_civicrm/wiki/Continuous-integration
 
 
 Credits
