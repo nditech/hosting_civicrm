@@ -483,19 +483,7 @@ function provision_civicrm_regenerate_settings_file($dbuser, $dbpass, $dbhost, $
 
   $protocol = (d()->ssl_enabled > 0 ? 'https' : 'http');
   $baseUrl = $protocol . '://' . d()->uri;
-  $drush_major_version = substr(DRUSH_VERSION, 0, 1);
-
-  // #2411137 NB: this tests the Drush version, not Drupal.
-  switch ($drush_major_version) {
-    case '5':
-    case '6':
-      $db_spec = _drush_sql_get_db_spec();
-      break;
-    default:
-      $sql = drush_get_class('Drush\Sql\Sql', array(), array(drush_drupal_major_version()));
-      $db_spec = $sql->get_db_spec();
-      break;
-  }
+  $db_spec = drush_civicrm_get_db_spec();
 
   // Check version: since 4.1, Drupal6 must be used for the UF in D6
   // The file civicrm-version.php appeared around 4.0, so it is safe to assume
