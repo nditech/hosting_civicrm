@@ -86,7 +86,13 @@ function _provision_civicrm_install_civicrm($dbuser, $dbpass, $dbhost, $dbname, 
   _civicrm_generate_settings_file($dbuser, $dbpass, $dbhost, $dbname, $modPath);
 
   drush_log(dt("CiviCRM: Enabling the CiviCRM module."));
-  module_enable(array('civicrm'));
+
+  if (drush_drupal_major_version() == 8) {
+    \Drupal::service('module_installer')->install(['civicrm']);
+  }
+  else {
+    module_enable(array('civicrm'));
+  }
 
   // Save the site key, in case we verify later on, it will regenerate
   // the civicrm.settings.php
