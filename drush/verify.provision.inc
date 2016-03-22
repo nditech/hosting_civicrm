@@ -59,11 +59,22 @@ function drush_provision_civicrm_post_provision_verify($url = NULL) {
     return;
   }
 
-  drush_include_engine('drupal', 'environment');
-  $modules = drush_get_modules();
+  if (d()->type == 'site') {
+    drush_include_engine('drupal', 'environment');
+    $modules = drush_get_modules();
 
-  if (! $modules['civicrm']->status) {
+    if (! $modules['civicrm']->status) {
+      drush_log(dt("CiviCRM: not enabled. Skipping verify operations for CiviCRM. You will need to re-verify the site if you enable CiviCRM in the future."));
+      return;
+    }
+  }
+  elseif (d()->type == 'wpsite' && ! function_exists('civicrm_initialize')) {
     drush_log(dt("CiviCRM: not enabled. Skipping verify operations for CiviCRM. You will need to re-verify the site if you enable CiviCRM in the future."));
+    return;
+  }
+
+  if (d()->type == 'wpsite') {
+    drush_log(dt("CiviCRM: WordPress integration not yet fully supported. Skipping post-verify."), 'warning');
     return;
   }
 

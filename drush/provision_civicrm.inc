@@ -301,6 +301,16 @@ function _provision_civicrm_is_site_context($load_if_missing = FALSE) {
     $crmpath = _provision_civicrm_get_package_path($load_if_missing);
     return ($crmpath ? TRUE : FALSE);
   }
+  elseif (d()->type == 'wpsite') {
+    // get path to wp-load.php
+    $path = d()->root . '/wp-load.php';
+    require_once($path);
+
+    if (function_exists('civicrm_initialize')) {
+      return TRUE;
+    }
+  }
+
   return FALSE;
 }
 
