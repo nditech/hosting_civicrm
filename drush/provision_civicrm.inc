@@ -302,17 +302,9 @@ function _provision_civicrm_is_site_context($load_if_missing = FALSE) {
     return ($crmpath ? TRUE : FALSE);
   }
   elseif (d()->type == 'wpsite') {
-    $command = drush_get_command();
-
-    // Only bootstrap WordPress when in a provision command (not wp-cli, for example).
-    if (! empty($command) && isset($command['command']) && substr($command['command'], 0, 9) == 'provision') {
-      // get path to wp-load.php
-      $path = d()->root . '/wp-load.php';
-      require_once($path);
-
-      if (function_exists('civicrm_initialize')) {
-        return TRUE;
-      }
+    // Requires hosting_wordpress in Aegir.
+    if (function_exists('civicrm_initialize')) {
+      return TRUE;
     }
   }
 
