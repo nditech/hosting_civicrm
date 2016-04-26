@@ -15,7 +15,7 @@ Requirements
 
 - Required: Aegir >= 3.x
 - Recommended: CiviCRM >= 4.4 (CiviCRM 4.2-4.4 are still tested but require a patch, see [14]).
-- Supports Drupal 6 and Drupal 7 (Drupal 8 will be supported)
+- Supports Drupal 6, Drupal 7 and Drupal 8
 
 [14] https://github.com/mlutfy/hosting_civicrm/wiki/CiviCRM-version-support
 
@@ -26,19 +26,13 @@ As of version 3.2, this module has been included in the Aegir distribution, as
 part of the "Golden contrib" initiative. As such, it is automatically available
 to be enabled without the need to deploy any code.
 
-For older versions, follow these steps:
+* In Aegir, enable CiviCRM and the CiviCRM cron queue from the "Hosting" options (under "experimental" options).
+* Create a platform with [CiviCRM](https://civicrm.org/download/list) located in sites/all/modules/ (or in an install profile)
+* In Aegir, add the platform inside Aegir (Node -> add -> platform)
 
-- Copy the module to your /var/aegir/hostmaster/sites/aegir.example.org/modules/
-- Enable the module: drush @hostmaster en hosting_civicrm -y
-- In Aegir, give the 'configure site CiviCRM cron intervals' permission to admins.
+When new sites are created in the platform, provision_civicrm will detect that CiviCRM is available and will automatically install it.
 
-If you are using the Debian package for Aegir and you would like to
-automate the installation of the module on new Aegir installs, you
-should use a custom makefile so that the module is not lost after an upgrade:
-http://community.aegirproject.org/upgrading/debian#Custom_distributions
-
-For convenience, a "drush make" makefile is available in drush/civicrm.make.
-
+For convenience, a "drush make" makefile is available in drush/civicrm.make which can be used to generate a platform for you.
 
 Debugging
 =========
@@ -78,7 +72,7 @@ If you appreciate this module, please consider donating to either CiviCRM
 or the Aegir project.
 
 * https://civicrm.org/participate/support-civicrm
-* http://community.aegirproject.org/donate
+* http://aegirproject.org/donate
 
 You can also send the lead module maintainer a beer:
 
