@@ -84,6 +84,10 @@ function drush_provision_civicrm_post_provision_verify($url = NULL) {
   // verify might return fail if, for example, this is a very old version of CiviCRM
   // in which case, no point continuing with the upgrade and cache clear.
   if (provision_civicrm_verify_common()) {
+    // In some circumstances during migrations, template_c directory can be
+    // deleted by a cache clear and the upgrade will fail.
+    provision_civicrm_setup_temp_directories();
+
     // Run the CiviCRM upgrade procedure
     _provision_civicrm_upgradedb();
 

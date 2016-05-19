@@ -34,8 +34,7 @@ function provision_civicrm_civicrm_init() {
  */
 function provision_civicrm_setup_temp_directories() {
   require_once 'CRM/Core/Config.php';
-  $config = CRM_Core_Config::singleton( );
-  $config->configAndLogDir = $config->configAndLogDir . 'drush/';
+  $config = CRM_Core_Config::singleton();
 
   // ConfigAndLog directory
   $exists = provision_file()->exists($config->configAndLogDir)
@@ -49,13 +48,7 @@ function provision_civicrm_setup_temp_directories() {
       ->status();
   }
 
-  if (! $exists) {
-    return FALSE;
-  }
-
   // Smarty template directory
-  $config->templateCompileDir = $config->templateCompileDir . 'drush/';
-
   $exists = provision_file()->exists($config->templateCompileDir)
     ->succeed('CiviCRM: @path exists.')
     ->status();
@@ -67,11 +60,37 @@ function provision_civicrm_setup_temp_directories() {
       ->status();
   }
 
+  // Smarty template directory for the default locale.
+  $lcMessages = _provision_civicrm_get_default_locale();
+
+  $exists = provision_file()->exists($config->templateCompileDir . '/' . $lcMessages)
+    ->succeed('CiviCRM: @path exists.')
+    ->status();
+
   if (! $exists) {
-    return FALSE;
+    $exists = provision_file()->mkdir($config->templateCompileDir . '/' . $lcMessages)
+      ->succeed('CiviCRM: compiled template path @path has been created.')
+      ->fail('CiviCRM: compiled template path @path could not be created.', 'DRUSH_PERM_ERROR')
+      ->status();
   }
 
   return TRUE;
+}
+
+/**
+ * Get the default CiviCRM locale.
+ * This is inspired from CRM_Core_Smarty::getLocale().
+ */
+function _provision_civicrm_get_default_locale() {
+  global $tsLocale;
+
+  $config = CRM_Core_Config::singleton();
+
+  if (!empty($config->lcMessages)) {
+    return $config->lcMessages;
+  }
+
+  return 'en_US';
 }
 
 /**
