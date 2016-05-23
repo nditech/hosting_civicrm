@@ -58,6 +58,7 @@ function _provision_civicrm_install_civicrm($dbuser, $dbpass, $dbhost, $dbname, 
   // Various civicrm.drush.inc functions expect the $crmPath to be set.
   global $crmPath;
   $crmPath = _provision_civicrm_get_package_path();
+  $loadGeneratedData = drush_get_option('load_generated_data', FALSE);
 
   drush_log('DRUSH_DRUPAL_ROOT: ' . drush_get_context('DRUSH_DRUPAL_ROOT'), 'ok');
   drush_log('DRUSH_SITE_ROOT: ' . drush_get_context('DRUSH_DRUPAL_SITE_ROOT', FALSE), 'ok');
@@ -79,7 +80,7 @@ function _provision_civicrm_install_civicrm($dbuser, $dbpass, $dbhost, $dbname, 
 
   // Install the database
   drush_log(dt("CiviCRM: Initializing the CiviCRM database."));
-  _civicrm_install_db($dbuser, $dbpass, $dbhost, $dbname, $modPath, $lang);
+  _civicrm_install_db($dbuser, $dbpass, $dbhost, $dbname, $modPath, $lang, $loadGeneratedData);
 
   // Generate civicrm.settings.php file
   drush_log(dt("CiviCRM: Generating the CiviCRM settings file."));
