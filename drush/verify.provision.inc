@@ -124,9 +124,11 @@ function provision_civicrm_provision_apache_vhost_config($data = null) {
     return;
   }
 
+  // Block access to user-uploaded sensitive files. See:
+  // https://wiki.civicrm.org/confluence/display/CRMDOC/checkUploadsAreNotAccessible
+  // https://wiki.civicrm.org/confluence/display/CRMDOC/checkLogFileIsNotAccessible
   $cividir = d()->site_path . '/files/civicrm';
   $contribdir = $cividir . '/persist/contribute';
-  $customdir = $cividir . '/custom';
   $dynamicdir = $cividir . '/dynamic';
 
   $htaccess  = 
@@ -135,10 +137,6 @@ function provision_civicrm_provision_apache_vhost_config($data = null) {
     . "  Deny from all\n"
     . "</Directory>\n"
     . "<Directory \"$contribdir\">\n"
-    . "  Order allow,deny\n"
-    . "  Allow from all\n"
-    . "</Directory>\n"
-    . "<Directory \"$customdir\">\n"
     . "  Order allow,deny\n"
     . "  Allow from all\n"
     . "</Directory>\n"
