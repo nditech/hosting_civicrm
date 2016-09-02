@@ -32,6 +32,11 @@ class installTest extends HostingCiviTestCase {
    * here.
    */
   public function tearDown() {
+    Command\PlatformDelete::run('civicrm43d7');
+    Command\PlatformDelete::run('civicrm44d7');
+    Command\PlatformDelete::run('civicrm46d7');
+    Command\PlatformDelete::run('civicrm46d6');
+    Command\PlatformDelete::run('civicrm47d7');
   }
 
   /**
