@@ -52,19 +52,17 @@ class installTest extends HostingCiviTestCase {
    * Test the installation and deletion of sites with CiviCRM.
    */
   public function testInstallAndDelete() {
-/*
-    $this->installSite('civicrm43d7', 'civicrm43d7-standard');
-    $this->removeSite('civicrm43d7-standard');
+    Command\SiteInstall::run('civicrm43d7', 'civicrm43d7-standard');
+    Command\SiteDelete::run('civicrm43d7-standard');
 
-    $this->installSite('civicrm44d7', 'civicrm44d7-standard');
-    $this->removeSite('civicrm44d7-standard');
+    Command\SiteInstall::run('civicrm44d7', 'civicrm44d7-standard');
+    Command\SiteDelete::run('civicrm44d7-standard');
 
-    $this->installSite('civicrm46d7', 'civicrm46d7-standard');
-    $this->removeSite('civicrm46d7-standard');
+    Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-standard');
+    Command\SiteDelete::run('civicrm46d7-standard');
 
-    $this->installSite('civicrm46d6', 'civicrm46d6', 'default');
-    $this->removeSite('civicrm46d6-default');
-*/
+    Command\SiteInstall::run('civicrm46d6', 'civicrm46d6-default', 'default');
+    Command\SiteDelete::run('civicrm46d6-default');
   }
 
 }

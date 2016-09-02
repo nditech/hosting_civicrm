@@ -30,6 +30,30 @@ function provision_civicrm_tests_drush_command() {
     ),
   );
 
+  $items['provision-civicrm-tests-install-site'] = array(
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    'arguments' => array(
+      'platform_name' => 'Platform name',
+      'site' => 'Site URI',
+      'profile' => 'Profile name',
+    ),
+    // Although we're a provision command, we require hostmaster to be around to
+    // run the tests correctly
+    'drupal dependencies' => array(
+      'hosting',
+    ),
+  );
+
+  $items['provision-civicrm-tests-delete-site'] = array(
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    'arguments' => array(
+      'site' => 'Site URI',
+    ),
+    'drupal dependencies' => array(
+      'hosting',
+    ),
+  );
+
   return $items;
 }
 
@@ -38,6 +62,20 @@ function provision_civicrm_tests_drush_command() {
  */
 function drush_provision_civicrm_tests_run_pending() {
   drush_provision_civicrm_tests_run_remaining_tasks();
+}
+
+/**
+ * Drush command to install a CiviCRM site.
+ */
+function drush_provision_civicrm_tests_install_site($platform_name, $site, $profile_name = 'standard') {
+  provision_civicrm_tests_install_site($platform_name, $site, $profile_name);
+}
+
+/**
+ * Drush command to delete a CiviCRM site.
+ */
+function drush_provision_civicrm_tests_delete_site($site) {
+  provision_civicrm_tests_remove_site($site);
 }
 
 /**
