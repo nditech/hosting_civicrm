@@ -32,9 +32,8 @@ abstract class HostingCiviTestCase extends \PHPUnit_Framework_TestCase {
    */
   public static function setUpBeforeClass() {
     parent::setUpBeforeClass();
-    $GLOBALS['argv'] = array('/usr/local/bin/drush', '@hostmaster', '--uri', 'http://erbil.bidon.ca', '--debug');
-    require_once('vendor/drush/drush/includes/preflight.inc');
 
+    require_once('vendor/drush/drush/includes/preflight.inc');
     drush_preflight_prepare();
 
     // Try to do a full Hostmaster bootstrap
