@@ -20,7 +20,24 @@ function provision_civicrm_tests_drush_command() {
     ),
   );
 
+  $items['provision-civicrm-tests-run-pending'] = array(
+    'description' => dt('Runs provision_civicrm pending tasks'),
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    // Although we're a provision command, we require hostmaster to be around to
+    // run the tests correctly
+    'drupal dependencies' => array(
+      'hosting',
+    ),
+  );
+
   return $items;
+}
+
+/**
+ * Drush command to run pending tasks.
+ */
+function drush_provision_civicrm_tests_run_pending() {
+  drush_provision_civicrm_tests_run_remaining_tasks();
 }
 
 /**
