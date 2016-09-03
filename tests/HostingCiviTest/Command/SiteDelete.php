@@ -10,7 +10,7 @@ class SiteDelete {
     // FIXME: normally we should use backend_invoke_foo(), but the
     // hostmaster context was not successfully bootstrapped, so the
     // commands aren't found.
-    exec('drush @hm provision-civicrm-tests-delete-site @' . drush_escapeshellarg($site) . '.aegir.example.com');
+    exec('drush @hm provision-civicrm-tests-delete-site @' . drush_escapeshellarg($site));
     exec('drush @hm provision-civicrm-tests-run-pending');
   }
 }
