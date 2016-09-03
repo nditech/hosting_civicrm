@@ -2,7 +2,7 @@
 
 namespace HostingCiviTest\Command;
 
-class PlatformDelete {
+class PlatformDelete extends Command {
 
   /**
    * Helper function to remove a platform.
@@ -11,8 +11,8 @@ class PlatformDelete {
     // FIXME: normally we should use backend_invoke_foo(), but the
     // hostmaster context was not successfully bootstrapped, so the
     // commands aren't found.
-    exec('drush @hm hosting-task ' . drush_escapeshellarg("@platform_$platform_name") . ' delete');
-    exec('drush @hm provision-civicrm-tests-run-pending');
+    self::exec('drush @hm hosting-task', ["@platform_$platform_name", 'delete']);
+    self::exec('drush @hm provision-civicrm-tests-run-pending');
   }
 
 }
