@@ -40,11 +40,11 @@ class Command {
         // $type === $process::ERR
         // NB: drush outputs all status messages on stderr
         // https://github.com/drush-ops/drush/issues/707
+        echo "$data\n";
+
         if (preg_match('/\[error\]/', $data)) {
           throw new Exception("Exec stderror: $data");
         }
-
-        echo "$data\n";
       }
     }
 
