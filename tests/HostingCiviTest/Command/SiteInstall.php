@@ -2,7 +2,7 @@
 
 namespace HostingCiviTest\Command;
 
-class SiteInstall extends Command {
+class SiteInstall extends \HostingCiviTest\Command {
   /**
    * Helper function to install a platform.
    */

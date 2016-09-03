@@ -2,7 +2,7 @@
 
 namespace HostingCiviTest\Command;
 
-class SiteDelete extends Command {
+class SiteDelete extends \HostingCiviTest\Command {
   /**
    * Helper function to install a platform.
    */

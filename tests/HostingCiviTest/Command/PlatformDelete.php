@@ -2,7 +2,7 @@
 
 namespace HostingCiviTest\Command;
 
-class PlatformDelete extends Command {
+class PlatformDelete extends \HostingCiviTest\Command {
 
   /**
    * Helper function to remove a platform.
