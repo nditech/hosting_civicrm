@@ -42,8 +42,12 @@ class Command {
         // https://github.com/drush-ops/drush/issues/707
         echo "$data\n";
 
-        if (preg_match('/\[error\]/', $data)) {
-          throw new Exception("Exec stderror: $data");
+        if (strpos($data, '[error]') !== FALSE) {
+          // Ignore this error, doesn't affect PHP >= 5.6
+          // https://docs.acquia.com/articles/php-56-and-mbstringhttpinput-errors
+          if (strpos($data, 'Multibyte string input conversion in PHP is active') === FALSE) {
+            throw new Exception("Exec stderror: $data");
+          }
         }
       }
     }
