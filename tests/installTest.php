@@ -3,7 +3,7 @@
 namespace HostingCiviTest;
 
 /**
- * Tests that phpunit is working.
+ * Drupal/CiviCRM installation tests.
  */
 class installTest extends HostingCiviTestCase {
   /**
