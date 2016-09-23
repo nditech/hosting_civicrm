@@ -12,8 +12,14 @@ function drush_provision_civicrm_post_provision_install($url = null) {
 
   $db_user = drush_get_option('db_user', NULL, 'site');
   $db_passwd = drush_get_option('db_passwd', NULL, 'site');
-  $db_host = drush_get_option('db_host', NULL, 'site');
   $db_name = drush_get_option('db_name', NULL, 'site');
+
+  // Always setting the port helps support non-standard aegir configs,
+  // but also workaround CRM-19407.
+  //
+  // FIXME: this is not if the hostname is using an IPv6 address
+  // but 1- use a hostname instead, and 2- needs fixing in civicrm.drush.inc.
+  $db_host = drush_get_option('db_host', NULL, 'site') . ':' . drush_get_option('db_port', 3306, 'site');
 
   // Inherit the language from Drupal
   // see _provision_civicrm_language_uf_to_civicrm() for details.
