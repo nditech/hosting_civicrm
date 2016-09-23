@@ -90,8 +90,8 @@ class installTest extends HostingCiviTestCase {
    * Test the installation and deletion of sites with CiviCRM 4.7 D7.
    */
   public function testInstallAndDelete47d7() {
-    Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-standard', 'default');
-    Command\SiteDelete::run('civicrm47d7-default');
+    Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-standard');
+    Command\SiteDelete::run('civicrm47d7-standard');
   }
 
 }
