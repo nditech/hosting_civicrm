@@ -4,7 +4,7 @@ namespace HostingCiviTest\Command;
 
 class SiteInstall extends \HostingCiviTest\Command {
   /**
-   * Helper function to install a platform.
+   * Helper function to install a site.
    */
   public static function run($platform_name, $site, $profile_name = 'standard') {
     // FIXME: normally we should use backend_invoke_foo(), but the
