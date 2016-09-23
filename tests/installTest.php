@@ -21,6 +21,8 @@ class installTest extends HostingCiviTestCase {
    * https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown
    */
   public static function setUpBeforeClass() {
+    parent::setUpBeforeClass();
+
     Command\PlatformInstall::run('civicrm43d7');
     Command\PlatformInstall::run('civicrm44d7');
     Command\PlatformInstall::run('civicrm46d7');
@@ -39,6 +41,8 @@ class installTest extends HostingCiviTestCase {
     Command\PlatformDelete::run('civicrm46d7');
     Command\PlatformDelete::run('civicrm46d6');
     Command\PlatformDelete::run('civicrm47d7');
+
+    parent::tearDownAfterClass();
   }
 
   /**
