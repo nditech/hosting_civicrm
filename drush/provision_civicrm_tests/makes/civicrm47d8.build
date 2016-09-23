@@ -7,7 +7,7 @@ libraries[civicrm][type] = "module"
 libraries[civicrm][directory_name] = "civicrm"
 libraries[civicrm][destination] = "modules"
 libraries[civicrm][download][type] = "get"
-libraries[civicrm][download][url] = "http://downloads.sourceforge.net/project/civicrm/civicrm-stable/4.7.3/civicrm-4.7.3-drupal.tar.gz"
+libraries[civicrm][download][url] = "http://downloads.sourceforge.net/project/civicrm/civicrm-stable/4.7.11/civicrm-4.7.11-drupal.tar.gz"
 
 ; Required until civicrm-drupal8 has release tarballs.
 libraries[civicrm][patch][] = "https://gist.githubusercontent.com/mlutfy/8d68671e79145158a8e3/raw/50f2c1b11c6b3352c098cad1492de2eef221e2a9/civicrm-d8-version.patch"
