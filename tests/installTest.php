@@ -14,11 +14,13 @@ class installTest extends HostingCiviTestCase {
   }
 
   /**
-   * Called before the test functions will be executed.
+   * Called before all test functions will be executed.
    * this function is defined in PHPUnit_TestCase and overwritten
-   * here
+   * here.
+   *
+   * https://phpunit.de/manual/current/en/fixtures.html#fixtures.more-setup-than-teardown
    */
-  public function setUp() {
+  public static function setUpBeforeClass() {
     Command\PlatformInstall::run('civicrm43d7');
     Command\PlatformInstall::run('civicrm44d7');
     Command\PlatformInstall::run('civicrm46d7');
@@ -31,7 +33,7 @@ class installTest extends HostingCiviTestCase {
    * this function is defined in PHPUnit_TestCase and overwritten
    * here.
    */
-  public function tearDown() {
+  public static function tearDownAfterClass() {
     Command\PlatformDelete::run('civicrm43d7');
     Command\PlatformDelete::run('civicrm44d7');
     Command\PlatformDelete::run('civicrm46d7');
@@ -78,6 +80,14 @@ class installTest extends HostingCiviTestCase {
   public function testInstallAndDelete46d6() {
     Command\SiteInstall::run('civicrm46d6', 'civicrm46d6-default', 'default');
     Command\SiteDelete::run('civicrm46d6-default');
+  }
+
+  /**
+   * Test the installation and deletion of sites with CiviCRM 4.7 D7.
+   */
+  public function testInstallAndDelete47d7() {
+    Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-standard', 'default');
+    Command\SiteDelete::run('civicrm47d7-default');
   }
 
 }
