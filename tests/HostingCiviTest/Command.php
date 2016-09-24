@@ -32,6 +32,10 @@ class Command {
       throw new Exception("exec: args must be wrapped in an array.");
     }
 
+    drush_log(dt('*************************************'), 'ok');
+    drush_log(dt('*** Running: !command', array('!command' => $command)), 'ok');
+    drush_log(dt('*************************************'), 'ok');
+
     $process = new Process($command);
     $process->start();
 
