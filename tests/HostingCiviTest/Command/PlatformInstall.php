@@ -14,6 +14,11 @@ class PlatformInstall extends \HostingCiviTest\Command {
       $platform_alias = $platform_name;
     }
 
+    if (is_dir("/var/aegir/platforms/$platform_alias")) {
+      drush_log(dt('Platform: @platform already exists, skipping build.', array('@platform' => $platform_alias)), 'ok');
+      return;
+    }
+
     drush_log(dt('Building platform: @platform and adding to hostmaster.', array('@platform' => $platform_alias)), 'ok');
 
     $args = array(
