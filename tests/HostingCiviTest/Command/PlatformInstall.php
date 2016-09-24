@@ -42,7 +42,7 @@ class PlatformInstall extends \HostingCiviTest\Command {
     // FIXME: normally we should use backend_invoke_foo(), but the
     // hostmaster context was not successfully bootstrapped, so the
     // commands aren't found.
-    exec('drush @hm hosting-import ' . drush_escapeshellarg("@platform_$platform_alias"));
-    exec('drush @hm provision-civicrm-tests-run-pending');
+    self::exec('drush @hm hosting-import' ["@platform_$platform_alias"]);
+    self::exec('drush @hm provision-civicrm-tests-run-pending');
   }
 }
