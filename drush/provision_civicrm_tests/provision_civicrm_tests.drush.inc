@@ -54,6 +54,19 @@ function provision_civicrm_tests_drush_command() {
     ),
   );
 
+  $items['provision-civicrm-tests-migrate-site'] = array(
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    'arguments' => array(
+      'site' => 'Site URI',
+      'target' => 'Target platform name',
+    ),
+    // Although we're a provision command, we require hostmaster to be around to
+    // run the tests correctly
+    'drupal dependencies' => array(
+      'hosting',
+    ),
+  );
+
   return $items;
 }
 
@@ -76,6 +89,13 @@ function drush_provision_civicrm_tests_install_site($platform_name, $site, $prof
  */
 function drush_provision_civicrm_tests_delete_site($site) {
   provision_civicrm_tests_remove_site($site);
+}
+
+/**
+ * Drush command to migrate a CiviCRM site.
+ */
+function drush_provision_civicrm_tests_migrate_site($site, $target) {
+  provision_civicrm_tests_migrate_site($site, $target);
 }
 
 /**
@@ -318,16 +338,7 @@ function provision_civicrm_tests_remove_site($site) {
  *   The target platform to migrate to.
  */
 function provision_civicrm_tests_migrate_site($site, $target) {
-  drush_log(dt('Migrating: @site to platform: @platform.', array('@site' => "$site.aegir.example.com", '@platform' => $target)), 'ok');
-  // Do the migrate.
-  provision_backend_invoke("@$site.aegir.example.com", 'provision-migrate', array("@platform_$target", array("debug" => TRUE)));
-  // Import the site into the frontend.
-  provision_backend_invoke('@hostmaster', 'hosting-import', array("@$site.aegir.example.com"));
-  // Verify the $target platform.
-  provision_backend_invoke('@hostmaster', 'hosting-task', array("@platform_$target", 'verify'), array('force' => TRUE));
-  // Import and verify the site.
-  provision_backend_invoke('@hostmaster', 'hosting-import', array("@$site.aegir.example.com"));
-  provision_backend_invoke('@hostmaster', 'hosting-task', array("@$site.aegir.example.com", 'verify'), array('force' => TRUE));
+  drush_provision_tests_migrate_site($site, $target);
   drush_provision_civicrm_tests_run_remaining_tasks();
 }
 

@@ -14,12 +14,15 @@ class Command {
    *
    * @param string $command Base command to execute.
    * @param array $args Command arguments (they get automatically escaped).
+   * @param boolean $return_output Return the command output, instead of echoing it.
    *
    * @throws ProcessFailedException, Exception
    *
    * @link http://symfony.com/doc/current/components/process.html
    */
-  function exec($command, $args = []) {
+  function exec($command, $args = [], $return_output = FALSE) {
+    $output = '';
+
     if (is_array($args)) {
       foreach ($args as $arg) {
         $command .= ' ' . drush_escapeshellarg($arg);
@@ -34,7 +37,12 @@ class Command {
 
     foreach ($process as $type => $data) {
       if ($type === $process::OUT) {
-        echo "$data\n";
+        if ($return_output) {
+          $output .= "$data\n";
+        }
+        else {
+          echo "$data\n";
+        }
       }
       else {
         // $type === $process::ERR
@@ -55,6 +63,12 @@ class Command {
     if (!$process->isSuccessful()) {
       throw new ProcessFailedException($process);
     }
+
+    if ($return_output) {
+      return $output;
+    }
+
+    return TRUE;
   }
 
 }
