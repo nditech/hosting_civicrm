@@ -14,6 +14,10 @@ if ((!@include $local_vendor_path)) {
   return FALSE;
 }
 
+ini_set('error_reporting', E_ALL);
+ini_set('display_errors', '1');
+ini_set('display_startup_errors', '1');
+
 hosting_civicrm_tests_init();
 
 /**

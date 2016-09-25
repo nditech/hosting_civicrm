@@ -36,11 +36,13 @@ class installTest extends HostingCiviTestCase {
    * here.
    */
   public static function tearDownAfterClass() {
-    Command\PlatformDelete::run('civicrm43d7');
-    Command\PlatformDelete::run('civicrm44d7');
-    Command\PlatformDelete::run('civicrm46d7');
-    Command\PlatformDelete::run('civicrm46d6');
-    Command\PlatformDelete::run('civicrm47d7');
+    // While in theory we should do this, it makes tests
+    // take a really long time, and does have many benefits.
+    # Command\PlatformDelete::run('civicrm43d7');
+    # Command\PlatformDelete::run('civicrm44d7');
+    # Command\PlatformDelete::run('civicrm46d7');
+    # Command\PlatformDelete::run('civicrm46d6');
+    # Command\PlatformDelete::run('civicrm47d7');
 
     parent::tearDownAfterClass();
   }

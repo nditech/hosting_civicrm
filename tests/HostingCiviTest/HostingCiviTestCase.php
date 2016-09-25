@@ -37,10 +37,12 @@ abstract class HostingCiviTestCase extends \PHPUnit_Framework_TestCase {
     drush_preflight_prepare();
 
     // Try to do a full Hostmaster bootstrap
+/*
     drush_bootstrap(DRUSH_BOOTSTRAP_DRUPAL_FULL);
 
     // Need to set DRUSH_COMMAND so that drush will be called and not phpunit
     define('DRUSH_COMMAND', '/usr/local/bin/drush');
+*/
   }
 
   public static function tearDownAfterClass() {
