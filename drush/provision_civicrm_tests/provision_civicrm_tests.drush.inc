@@ -30,6 +30,19 @@ function provision_civicrm_tests_drush_command() {
     ),
   );
 
+  $items['provision-civicrm-tests-install-platform'] = array(
+    'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
+    'arguments' => array(
+      'platform_name' => 'Platform name',
+      'platform_alias' => 'Platform alias',
+    ),
+    // Although we're a provision command, we require hostmaster to be around to
+    // run the tests correctly
+    'drupal dependencies' => array(
+      'hosting',
+    ),
+  );
+
   $items['provision-civicrm-tests-install-site'] = array(
     'bootstrap' => DRUSH_BOOTSTRAP_DRUPAL_FULL,
     'arguments' => array(
@@ -75,6 +88,13 @@ function provision_civicrm_tests_drush_command() {
  */
 function drush_provision_civicrm_tests_run_pending() {
   drush_provision_civicrm_tests_run_remaining_tasks();
+}
+
+/**
+ * Drush command to install a CiviCRM platform.
+ */
+function drush_provision_civicrm_tests_install_platform($platform_name, $site, $profile_name = 'standard') {
+  provision_civicrm_tests_install_platform($platform_name, $site, $profile_name);
 }
 
 /**

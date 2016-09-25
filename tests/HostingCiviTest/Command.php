@@ -20,12 +20,12 @@ class Command {
    *
    * @link http://symfony.com/doc/current/components/process.html
    */
-  function exec($command, $args = [], $return_output = FALSE) {
+  public static function exec($command, $args = [], $return_output = FALSE) {
     $output = '';
 
     if (is_array($args)) {
       foreach ($args as $arg) {
-        $command .= ' ' . drush_escapeshellarg($arg);
+        $command .= ' ' . escapeshellarg($arg);
       }
     }
     elseif (!empty($args)) {
@@ -87,12 +87,12 @@ class Command {
    *
    * @link http://symfony.com/doc/current/components/process.html
    */
-  function execReturn($command, $args = []) {
+  public static function execReturn($command, $args = []) {
     $output = '';
 
     if (is_array($args)) {
       foreach ($args as $arg) {
-        $command .= ' ' . drush_escapeshellarg($arg);
+        $command .= ' ' . escapeshellarg($arg);
       }
     }
     elseif (!empty($args)) {
