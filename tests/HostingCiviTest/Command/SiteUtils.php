@@ -13,7 +13,7 @@ class SiteUtils extends \HostingCiviTest\Command {
       return $info['civi']['version'];
     }
 
-    throw new \Exception("HostingCiviTest\Command::getCiviVerson: could not find CiviCRM version: " . print_r($info, 1));
+    throw new \Exception("Could not find CiviCRM version: " . print_r($info, 1));
   }
 
   /**
@@ -26,7 +26,7 @@ class SiteUtils extends \HostingCiviTest\Command {
     self::exec('drush @' . escapeshellcmd($site) . ' cc drush');
 
     // Run System.get API
-    $output = self::exec('drush @' . escapeshellcmd($site) . ' cvapi System.get --out=json', [], TRUE);
+    $output = self::execReturn('drush @' . escapeshellcmd($site) . ' cvapi System.get --out=json');
     $info = json_decode($output, TRUE);
 
     return $info['values'][0];

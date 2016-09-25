@@ -55,48 +55,48 @@ class migrateTest extends HostingCiviTestCase {
    * Test the migration of a 4.7 D7 site.
    */
   public function testMigrate47d7() {
-    Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-standard');
-    Command\SiteMigrate::run('civicrm47d7-standard', 'civicrm47d7_other');
-    Command\SiteDelete::run('civicrm47d7-standard');
+    Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-mig');
+    Command\SiteMigrate::run('civicrm47d7-mig', 'civicrm47d7_other');
+    Command\SiteDelete::run('civicrm47d7-mig');
   }
 
   /**
    * Test the migration of a 4.6 D7 site.
    */
   public function testMigrate46d7() {
-    Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-standard');
-    Command\SiteMigrate::run('civicrm46d7-standard', 'civicrm46d7_other');
-    Command\SiteDelete::run('civicrm46d7-standard');
+    Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-mig');
+    Command\SiteMigrate::run('civicrm46d7-mig', 'civicrm46d7_other');
+    Command\SiteDelete::run('civicrm46d7-mig');
   }
 
   /**
    * Test the migration of a 4.6 D7 site to 4.7 D7.
    */
   public function testMigrate46d7to47d7() {
-    Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-standard');
-    Command\SiteMigrate::run('civicrm46d7-standard', 'civicrm47d7');
+    Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-mig');
+    Command\SiteMigrate::run('civicrm46d7-mig', 'civicrm47d7');
 
     // Confirm that we are on CiviCRM 4.6
-    $version = Command\SiteUtils::getCiviVersion('civicrm46d7-standard');
+    $version = Command\SiteUtils::getCiviVersion('civicrm46d7-mig');
     $version = substr($version, 0, 3);
     $this->assertEquals($version, '4.7');
 
-    Command\SiteDelete::run('civicrm46d7-standard');
+    Command\SiteDelete::run('civicrm46d7-mig');
   }
 
   /**
    * Test the migration of a 4.4 D7 site to 4.7 D7.
    */
   public function testMigrate44d7to47d7() {
-    Command\SiteInstall::run('civicrm44d7', 'civicrm44d7-standard');
-    Command\SiteMigrate::run('civicrm44d7-standard', 'civicrm47d7');
+    Command\SiteInstall::run('civicrm44d7', 'civicrm44d7-mig');
+    Command\SiteMigrate::run('civicrm44d7-mig', 'civicrm47d7');
 
     // Confirm that we are on CiviCRM 4.7
-    $version = Command\SiteUtils::getCiviVersion('civicrm44d7-standard');
+    $version = Command\SiteUtils::getCiviVersion('civicrm44d7-mig');
     $version = substr($version, 0, 3);
     $this->assertEquals($version, '4.7');
 
-    Command\SiteDelete::run('civicrm44d7-standard');
+    Command\SiteDelete::run('civicrm44d7-mig');
   }
 
 }
