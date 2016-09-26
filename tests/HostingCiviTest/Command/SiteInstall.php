@@ -13,4 +13,5 @@ class SiteInstall extends \HostingCiviTest\Command {
     self::exec('drush @hm provision-civicrm-tests-install-site', [$platform_name, $site, $profile_name]);
     self::exec('drush @hm provision-civicrm-tests-run-pending');
   }
+
 }

@@ -56,6 +56,12 @@ class migrateTest extends HostingCiviTestCase {
    */
   public function testMigrate47d7() {
     Command\SiteInstall::run('civicrm47d7', 'civicrm47d7-mig');
+
+    // Enable extensions for testing
+    Command\SiteUtils::enableExtension('civicrm47d7-mig', 'com.iatspayments.civicrm');
+    Command\SiteUtils::enableExtension('civicrm47d7-mig', 'coop.symbiotic.aegirtests');
+
+    // Start migration
     Command\SiteMigrate::run('civicrm47d7-mig', 'civicrm47d7_other');
     Command\SiteDelete::run('civicrm47d7-mig');
   }
@@ -65,6 +71,12 @@ class migrateTest extends HostingCiviTestCase {
    */
   public function testMigrate46d7() {
     Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-mig');
+
+    // Enable extensions for testing
+    Command\SiteUtils::enableExtension('civicrm46d7-mig', 'com.iatspayments.civicrm');
+    Command\SiteUtils::enableExtension('civicrm46d7-mig', 'coop.symbiotic.aegirtests');
+
+    // Start migration
     Command\SiteMigrate::run('civicrm46d7-mig', 'civicrm46d7_other');
     Command\SiteDelete::run('civicrm46d7-mig');
   }
@@ -74,6 +86,12 @@ class migrateTest extends HostingCiviTestCase {
    */
   public function testMigrate46d7to47d7() {
     Command\SiteInstall::run('civicrm46d7', 'civicrm46d7-mig');
+
+    // Enable extensions for testing
+    Command\SiteUtils::enableExtension('civicrm46d7-mig', 'com.iatspayments.civicrm');
+    Command\SiteUtils::enableExtension('civicrm46d7-mig', 'coop.symbiotic.aegirtests');
+
+    // Start migration
     Command\SiteMigrate::run('civicrm46d7-mig', 'civicrm47d7');
 
     // Confirm that we are on CiviCRM 4.6
