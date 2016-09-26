@@ -32,4 +32,23 @@ class SiteUtils extends \HostingCiviTest\Command {
     return $info['values'][0];
   }
 
+  /**
+   * Helper function to enable a CiviCRM extension on a site.
+   */
+  public static function enableExtension($site, $extension_name) {
+    $site .= '.aegir.example.com';
+
+    // Flush the drush cache to avoid 'civicrm must be enabled' error.
+    self::exec('drush @' . escapeshellcmd($site) . ' cc drush');
+    self::exec('drush @' . escapeshellcmd($site) . ' cvapi Extension.refresh');
+
+    // Run the Extension.install API
+    $output = self::execReturn('drush @' . escapeshellcmd($site) . ' cvapi Extension.install --out=json', ['key=' . $extension_name]);
+    $info = json_decode($output, TRUE);
+
+    if (! empty($info['is_error'])) {
+      throw new \Exception("Failed to enable extension: " . $info['error_message']);
+    }
+  }
+
 }
