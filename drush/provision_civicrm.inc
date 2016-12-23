@@ -494,6 +494,9 @@ function provision_civicrm_regenerate_settings_file($dbuser, $dbpass, $dbhost, $
     "$crmPath/templates/CRM/common/civicrm.settings.php.tpl"
   );
 
+  // Allow overriding the template file search paths.
+  drush_command_invoke_all_ref('civicrm_settings_template_files_alter', $files);
+
   $settingsTplFile = NULL;
   foreach ($files as $file) {
     if (file_exists($file)) {
@@ -539,6 +542,10 @@ function provision_civicrm_regenerate_settings_file($dbuser, $dbpass, $dbhost, $
     'siteKey' => $sitekey,
   );
   $str = file_get_contents($settingsTplFile);
+  // Allow changes to the settings file template.
+  drush_command_invoke_all_ref('civicrm_settings_template_alter', $str);
+  // Allow addition to and overrides of the settings file parameters.
+  drush_command_invoke_all_ref('civicrm_settings_parameters_alter', $params);
   foreach ($params as $key => $value) {
     $str = str_replace('%%' . $key . '%%', $value, $str);
   }
